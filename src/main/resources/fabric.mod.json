@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "dmo-skills",
+  "version": "${version}",
+  "name": "DMO: Skills",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "cardinal-components": [
+      "dev.dakoda.dmo.skills.component.DMOSkillsComponents"
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "dev.dakoda.dmo.skills.client.ClientDMOSkills"
+      }
+    ],
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "dev.dakoda.dmo.skills.DMOSkills"
+      }
+    ]
+  },
+  "mixins": [
+    "dmo-skills.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.1"
+  },
+  "custom": {
+    "cardinal-components": [
+      "dmo:skills"
+    ]
+  }
+}
