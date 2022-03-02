@@ -2,6 +2,7 @@ plugins {
     id 'fabric-loom' version '0.11-SNAPSHOT'
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id "org.jlleitschuh.gradle.ktlint" version "10.2.1"
 }
 
 version = project.mod_version

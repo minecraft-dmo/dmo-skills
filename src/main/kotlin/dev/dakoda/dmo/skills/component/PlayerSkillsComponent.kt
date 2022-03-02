@@ -1,27 +1,35 @@
 package dev.dakoda.dmo.skills.component
 
-import dev.dakoda.dmo.skills.PlayerSkill
-import dev.dakoda.dmo.skills.PlayerSkill.MINING
-import dev.dakoda.dmo.skills.PlayerSkill.WOODCUTTING
-import dev.dakoda.dmo.skills.PlayerSkills
+import dev.dakoda.dmo.skills.Skill
+import dev.dakoda.dmo.skills.Skills
+import dev.dakoda.dmo.skills.Skills.EXP
+import dev.dakoda.dmo.skills.TrackableSkill
 import net.minecraft.nbt.NbtCompound
 
 class PlayerSkillsComponent : IPlayerSkillsComponent {
 
-    override var skills: PlayerSkills = PlayerSkills.blank()
+    override var skills: Skills = Skills()
 
-    override fun increment(inc: Float, skill: PlayerSkill) = skills.increment(inc, skill)
-
-    override fun readFromNbt(tag: NbtCompound) {
-        skills = PlayerSkills.construct(
-            woodcutting = tag.getSkill(WOODCUTTING),
-            mining = tag.getSkill(MINING)
-        )
+    override fun increment(inc: Int, skill: Skill) {
+        skills.increment(inc, skill)
     }
 
-    fun NbtCompound.getSkill(skill: PlayerSkill) = this.getFloat(skill.name)
+    override fun readFromNbt(tag: NbtCompound) {
+        val newMap = mutableMapOf<TrackableSkill, EXP>()
+        Skill.all.forEach {
+            newMap[it] = EXP(it).apply {
+                raw = tag.getSkill(it)
+            }
+        }
+        skills.values.clear()
+        skills.values.putAll(newMap)
+    }
+
+    private fun NbtCompound.getSkill(skill: TrackableSkill) = this.getInt(skill.name)
 
     override fun writeToNbt(tag: NbtCompound) = with(skills) {
-        tag.putSkills()
+        Skill.all.forEach {
+            tag.putInt(it.name, skills.values[it]?.raw ?: -1)
+        }
     }
 }

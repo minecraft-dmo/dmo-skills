@@ -1,12 +1,12 @@
 package dev.dakoda.dmo.skills.component
 
-import dev.dakoda.dmo.skills.PlayerSkill
-import dev.dakoda.dmo.skills.PlayerSkills
+import dev.dakoda.dmo.skills.Skill
+import dev.dakoda.dmo.skills.Skills
 import dev.onyxstudios.cca.api.v3.component.Component
 
 interface IPlayerSkillsComponent : Component {
 
-    var skills: PlayerSkills
+    var skills: Skills
 
-    fun increment(inc: Float, skill: PlayerSkill)
+    fun increment(inc: Int, skill: Skill)
 }

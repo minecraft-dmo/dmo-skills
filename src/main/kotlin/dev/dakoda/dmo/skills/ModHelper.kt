@@ -1,5 +1,29 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package dev.dakoda.dmo.skills
 
+import dev.dakoda.dmo.skills.Skills.EXP
+import dev.dakoda.dmo.skills.Skills.EXP.Companion.NULL
+import net.fabricmc.fabric.api.client.screen.v1.Screens
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.gui.widget.ClickableWidget
+import net.minecraft.client.network.ClientPlayerEntity
+import net.minecraft.text.Text
+import net.minecraft.util.Identifier
+import net.minecraft.util.Util.NIL_UUID
 
-val game: MinecraftClient by lazy { MinecraftClient.getInstance() }
+object ModHelper {
+    const val modID = "dmo-skills"
+
+    fun resource(location: String) = Identifier(modID, location)
+
+    val game: MinecraftClient by lazy { MinecraftClient.getInstance() }
+
+    val Screen.buttons: MutableList<ClickableWidget>
+        get() = Screens.getButtons(this)
+
+    fun ClientPlayerEntity?.debugMessage(text: String) = this?.sendSystemMessage(Text.of(text), NIL_UUID)
+
+    fun List<EXP>.find(trackableSkill: TrackableSkill) = this.find { it.skill == trackableSkill } ?: NULL
+}
