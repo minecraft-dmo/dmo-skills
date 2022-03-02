@@ -17,13 +17,6 @@ class DMOSkills : ModInitializer {
                 playerSkills.increment(1, LUMBERING)
                 player.sendSystemMessage(LiteralText("Woodcutting: ${playerSkills[LUMBERING].raw}"), Util.NIL_UUID)
             }
-
-//            HudRenderCallback.EVENT.register { matrices, delta ->
-//                MinecraftClient.getInstance().textRenderer.draw(matrices, "hello", 5f, 5f, 0)
-//
-//            }
-
-            // Text text, float x, float y, int color, boolean shadow, Matrix4f matrix, VertexConsumerProvider vertexConsumers, boolean seeThrough, int backgroundColor, int light
         }
     }
 }
