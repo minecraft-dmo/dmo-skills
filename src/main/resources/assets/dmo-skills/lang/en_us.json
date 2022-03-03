@@ -1,4 +1,6 @@
 {
+  "dmo.skills": "Skills",
+
   "dmo.skills.gathering": "Gathering",
   "dmo.skills.gathering.lumbering": "Lumbering",
   "dmo.skills.gathering.mining": "Mining",
@@ -15,9 +17,9 @@
   "dmo.skills.explorer.cartography": "Cartography",
   "dmo.skills.explorer.architecture": "Architecture",
 
-  "dmo.skills.adventure": "Adventure",
-  "dmo.skills.adventure.melee": "Melee",
-  "dmo.skills.adventure.archery": "Archery",
+  "dmo.skills.combat": "Combat",
+  "dmo.skills.combat.melee": "Melee",
+  "dmo.skills.combat.archery": "Archery",
 
   "dmo.skills.crafting": "Crafting",
   "dmo.skills.crafting.alchemy": "Alchemy",
