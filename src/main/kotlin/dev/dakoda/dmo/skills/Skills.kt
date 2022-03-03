@@ -31,7 +31,7 @@ class Skills(
 
     private fun levelOf(trackableSkill: TrackableSkill): Int {
         if (trackableSkill is Skill) trackableSkill.updateRaw()
-        return values[trackableSkill]?.level ?: -1
+        return values[trackableSkill]?.level ?: 0
     }
 
     private fun Skill.updateRaw() {

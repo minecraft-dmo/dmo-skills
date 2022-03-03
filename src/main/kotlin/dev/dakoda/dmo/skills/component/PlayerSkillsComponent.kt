@@ -4,9 +4,14 @@ import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.Skills
 import dev.dakoda.dmo.skills.Skills.EXP
 import dev.dakoda.dmo.skills.TrackableSkill
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent
 import net.minecraft.nbt.NbtCompound
 
-class PlayerSkillsComponent : IPlayerSkillsComponent {
+class PlayerSkillsComponent : IPlayerSkillsComponent, AutoSyncedComponent {
+
+    companion object {
+        const val DEFAULT_VALUE = 0
+    }
 
     override var skills: Skills = Skills()
 
@@ -27,9 +32,9 @@ class PlayerSkillsComponent : IPlayerSkillsComponent {
 
     private fun NbtCompound.getSkill(skill: TrackableSkill) = this.getInt(skill.name)
 
-    override fun writeToNbt(tag: NbtCompound) = with(skills) {
+    override fun writeToNbt(tag: NbtCompound) {
         Skill.all.forEach {
-            tag.putInt(it.name, skills.values[it]?.raw ?: -1)
+            tag.putInt(it.name, skills.values[it]?.raw ?: DEFAULT_VALUE)
         }
     }
 }
