@@ -10,12 +10,16 @@ import net.minecraft.util.Identifier
 class DMOSkillsComponents : EntityComponentInitializer {
 
     companion object {
-        val COMPONENT_PLAYER_SKILLS: ComponentKey<IPlayerSkillsComponent> = ComponentRegistry.getOrCreate(
-            Identifier("dmo", "skills"), IPlayerSkillsComponent::class.java
+        val COMP_SKILLS_EXP: ComponentKey<ISkillsEXPComponent> = ComponentRegistry.getOrCreate(
+            Identifier("dmo", "skills_exp"), ISkillsEXPComponent::class.java
+        )
+        val COMP_SKILLS_TRACKED: ComponentKey<ISkillsTrackedComponent> = ComponentRegistry.getOrCreate(
+            Identifier("dmo", "skills_track"), ISkillsTrackedComponent::class.java
         )
     }
 
     override fun registerEntityComponentFactories(registry: EntityComponentFactoryRegistry) {
-        registry.registerForPlayers(COMPONENT_PLAYER_SKILLS, { PlayerSkillsComponent() }, ALWAYS_COPY)
+        registry.registerForPlayers(COMP_SKILLS_EXP, { SkillsEXPComponent() }, ALWAYS_COPY)
+        registry.registerForPlayers(COMP_SKILLS_TRACKED, { SkillsTrackedComponent() }, ALWAYS_COPY)
     }
 }

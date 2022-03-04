@@ -35,7 +35,8 @@
   },
   "custom": {
     "cardinal-components": [
-      "dmo:skills"
+      "dmo:skills_exp",
+      "dmo:skills_track"
     ]
   }
 }

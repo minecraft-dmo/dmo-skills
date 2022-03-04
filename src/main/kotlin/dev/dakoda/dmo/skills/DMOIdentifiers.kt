@@ -4,7 +4,6 @@ import dev.dakoda.dmo.skills.ModHelper.resource
 
 object DMOIdentifiers {
 
-    object Widgets {
-        val WIDGETS_TEXTURE = resource("textures/gui/widgets.png")
-    }
+    val WIDGETS_TEXTURE = resource("textures/gui/widgets.png")
+    val ICONS_TEXTURE = resource("textures/gui/icons.png")
 }

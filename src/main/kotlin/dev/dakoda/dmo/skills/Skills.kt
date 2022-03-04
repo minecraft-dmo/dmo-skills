@@ -1,6 +1,7 @@
 package dev.dakoda.dmo.skills
 
 class Skills(
+
     val values: MutableMap<TrackableSkill, EXP> = mutableMapOf()
 ) {
 
@@ -15,10 +16,30 @@ class Skills(
         if (trackableSkill is Skill) return
         if (trackableSkill in values.keys) {
             val before = values[trackableSkill]?.raw
-            println("${trackableSkill.name} EXP was $before, increased to ")
-            values[trackableSkill]?.raw = ((before ?: 0) + inc).also {
-                println(it)
+
+            val exp = values[trackableSkill] ?: return
+            with(exp) {
+                val i = (raw + inc)
+                if (i >= perLevel) {
+                    println("level is $level")
+                    println("perLevel is $perLevel")
+                    var n = i
+                    println("n started at $n")
+                    while (i >= perLevel) {
+                        println("n decreased to ${n - perLevel}")
+                        n -= perLevel
+                        level++
+                    }
+                    println("n finished at $n")
+                    println("Level increased to $level, EXP set to $n")
+                    raw = n
+                } else {
+                    raw = i
+                }
             }
+
+            values[trackableSkill]?.raw = ((before ?: 0) + inc)
+            println("${trackableSkill.name} EXP was $before, increased to ${values[trackableSkill]?.raw}")
         }
     }
 
@@ -74,23 +95,26 @@ class Skills(
         constructor(subSkill: Skill.Sub) : this(subSkill as TrackableSkill)
 
         companion object {
-            const val expPerLevel = 200
+            const val baseExpPerLevel = 10
 
             val NULL get() = EXP(Skill.NULL)
         }
 
-        var raw: Int = 0
+        val perLevel: Int
+            get() = baseExpPerLevel + (12 * level)
 
-        val level: Int get() = (raw / expPerLevel)
+        var raw: Int = 0
+        var level: Int = 0
     }
 
     companion object {
-        val BLANK: Skills get() {
-            val values: MutableMap<TrackableSkill, EXP> = mutableMapOf()
-            Skill.all.forEach { trackableSkill: TrackableSkill ->
-                values[trackableSkill] = EXP(trackableSkill)
+        val BLANK: Skills
+            get() {
+                val values: MutableMap<TrackableSkill, EXP> = mutableMapOf()
+                Skill.all.forEach { trackableSkill: TrackableSkill ->
+                    values[trackableSkill] = EXP(trackableSkill)
+                }
+                return Skills(values)
             }
-            return Skills(values)
-        }
     }
 }

@@ -1,42 +1,49 @@
 package dev.dakoda.dmo.skills.gui
 
 import com.mojang.blaze3d.systems.RenderSystem
+import dev.dakoda.dmo.skills.DMOIdentifiers
 import dev.dakoda.dmo.skills.ModHelper.game
+import dev.dakoda.dmo.skills.ModHelper.leftOfInventory
 import dev.dakoda.dmo.skills.ModHelper.resource
-import net.minecraft.client.MinecraftClient
+import dev.dakoda.dmo.skills.ModHelper.rightOfInventory
+import dev.dakoda.dmo.skills.ModHelper.topOfInventory
+import dev.dakoda.dmo.skills.Skill
+import dev.dakoda.dmo.skills.TrackableSkill
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget.PressAction
 import net.minecraft.client.gui.widget.TexturedButtonWidget
-import net.minecraft.client.util.Window
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
+import net.minecraft.item.Items.CHEST
 import net.minecraft.item.Items.COMPASS
 import net.minecraft.item.Items.EMERALD
-import net.minecraft.item.Items.IRON_INGOT
-import net.minecraft.item.Items.IRON_ORE
 import net.minecraft.item.Items.IRON_SWORD
 import net.minecraft.item.Items.POTION
 import net.minecraft.item.Items.RAW_IRON
-import net.minecraft.item.Items.SWEET_BERRIES
 import net.minecraft.item.Items.WHEAT
-import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
 class SkillCategoryWidget(
-    screen: Screen?,
     pressAction: PressAction = PressAction { },
-    x: Int = 0, y: Int = 0,
-    width: Int = 20, height: Int = 20,
-    override var texU: Int = 0, override var texV: Int = 0,
+    x: Int = 0,
+    y: Int = 0,
+    width: Int = 20,
+    height: Int = 20,
+    override var texU: Int = 0,
+    override var texV: Int = 0,
     override var hoveredVOffset: Int = height,
-    var tex: Identifier = resource("textures/gui/widgets.png"),
-    override var texW: Int = width, override var texH: Int = height * 2,
+    var tex: Identifier = DMOIdentifiers.WIDGETS_TEXTURE,
+    override var texW: Int = width,
+    override var texH: Int = height * 2,
 ) : TexturedButtonWidget(x, y, width, height, texU, texV, hoveredVOffset, tex, texW, texH, pressAction), DMOWidget {
 
     private val window get() = game.window
 
-    private val texVModified get() = if (this.isHovered) texV + hoveredVOffset else texV
+    var isSelected: Boolean = false
+
+    private val texVModified get() = if (this.isHovered or this.isSelected) texV + hoveredVOffset else texV
 
     lateinit var renderOverride: (matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) -> Unit
 
@@ -56,13 +63,14 @@ class SkillCategoryWidget(
         private const val U_BOOK_BUTTON = 20
 
         const val BUTTON_SIZE = 20
-        const val BUTTON_SEPARATE = 22
+        const val BUTTON_SEPARATE = BUTTON_SIZE + 2
 
         fun menu(
             screen: Screen?,
-            xOffset: Int = 0, yOffset: Int = 0,
+            xOffset: Int = 0,
+            yOffset: Int = 0,
             pressAction: PressAction
-        ) = SkillCategoryWidget(screen, pressAction).apply {
+        ) = SkillCategoryWidget(pressAction).apply {
             renderOverride = { matrices, mouseX, mouseY, _ ->
                 RenderSystem.setShaderTexture(0, tex)
                 drawTexture(matrices, x, y, texU.float, texVModified.float, width, height, 100, 100)
@@ -75,12 +83,31 @@ class SkillCategoryWidget(
             texU = U_BOOK_BUTTON
         }
 
-        fun categoryButton(
+        fun menuInventory(
             screen: Screen?,
-            itemIcon: ItemStack, toolTipKey: String,
-            xOffset: Int = 0, yOffset: Int = 0,
+            xOffset: Int = 0,
+            yOffset: Int = 0,
             pressAction: PressAction
-        ) = SkillCategoryWidget(screen, pressAction).apply {
+        ) = SkillCategoryWidget(pressAction).apply {
+            renderOverride = { matrices, mouseX, mouseY, _ ->
+                RenderSystem.setShaderTexture(0, tex)
+                drawTexture(matrices, x, y, texU.float, texVModified.float, width, height, 100, 100)
+
+                game.itemRenderer.renderGuiItemIcon(CHEST.defaultStack, x + 2, y + 1)
+                if (isHovered) {
+                    screen?.renderTooltip(matrices, TranslatableText("dmo.skills.inventory.back"), mouseX, mouseY)
+                }
+            }
+            x = window.leftOfInventory + xOffset; y = window.topOfInventory + yOffset
+            texU = U_BLANK_BUTTON
+        }
+
+        private fun categoryButton(
+            screen: Screen?,
+            itemIcon: ItemStack,
+            toolTipKey: String,
+            pressAction: PressAction
+        ) = SkillCategoryWidget(pressAction).apply {
             renderOverride = { matrices, mouseX, mouseY, _ ->
                 // Draw button background
                 RenderSystem.setShaderTexture(0, tex)
@@ -95,81 +122,20 @@ class SkillCategoryWidget(
             }
         }
 
-        fun catGathering(
+        fun makeCategoryButton(
             screen: Screen?,
-            xOffset: Int = 0, yOffset: Int = 0, pressAction: PressAction
+            skill: Skill,
+            xOffset: Int = 0,
+            yOffset: Int = 0,
+            pressAction: PressAction,
         ) = categoryButton(
             screen,
-            RAW_IRON.defaultStack, "dmo.skills.gathering",
-            xOffset, yOffset, pressAction
+            skill.stack(), "dmo.skills.${skill.name.lowercase()}",
+            pressAction
         ).apply {
             x = window.rightOfInventory + xOffset; y = window.topOfInventory + yOffset
             texU = U_BLANK_BUTTON
         }
-
-        fun catFarming(
-            screen: Screen?,
-            xOffset: Int = 0, yOffset: Int = 0, pressAction: PressAction
-        ) = categoryButton(
-            screen,
-            WHEAT.defaultStack, "dmo.skills.farming",
-            xOffset, yOffset, pressAction
-        ).apply {
-            x = window.rightOfInventory + xOffset; y = window.topOfInventory + yOffset
-            texU = U_BLANK_BUTTON
-        }
-
-        fun catMerchant(
-            screen: Screen?,
-            xOffset: Int = 0, yOffset: Int = 0, pressAction: PressAction
-        ) = categoryButton(
-            screen,
-            EMERALD.defaultStack, "dmo.skills.merchant",
-            xOffset, yOffset, pressAction
-        ).apply {
-            x = window.rightOfInventory + xOffset; y = window.topOfInventory + yOffset
-            texU = U_BLANK_BUTTON
-        }
-
-        fun catExplorer(
-            screen: Screen?,
-            xOffset: Int = 0, yOffset: Int = 0, pressAction: PressAction
-        ) = categoryButton(
-            screen,
-            COMPASS.defaultStack, "dmo.skills.explorer",
-            xOffset, yOffset, pressAction
-        ).apply {
-            x = window.rightOfInventory + xOffset; y = window.topOfInventory + yOffset
-            texU = U_BLANK_BUTTON
-        }
-
-        fun catCombat(
-            screen: Screen?,
-            xOffset: Int = 0, yOffset: Int = 0, pressAction: PressAction
-        ) = categoryButton(
-            screen,
-            IRON_SWORD.defaultStack, "dmo.skills.combat",
-            xOffset, yOffset, pressAction
-        ).apply {
-            x = window.rightOfInventory + xOffset; y = window.topOfInventory + yOffset
-            texU = U_BLANK_BUTTON
-        }
-
-        fun catCrafting(
-            screen: Screen?,
-            xOffset: Int = 0, yOffset: Int = 0, pressAction: PressAction
-        ) = categoryButton(
-            screen,
-            POTION.defaultStack, "dmo.skills.crafting",
-            xOffset, yOffset, pressAction
-        ).apply {
-            x = window.rightOfInventory + xOffset; y = window.topOfInventory + yOffset
-            texU = U_BLANK_BUTTON
-        }
-
-        private val Window.leftOfInventory get() = (this.scaledWidth / 2) - 110
-        private val Window.rightOfInventory get() = (this.scaledWidth / 2) + 90
-        private val Window.topOfInventory get() = (this.scaledHeight / 2) - 80
 
         private val Int.float get() = this.toFloat()
     }

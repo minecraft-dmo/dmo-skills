@@ -1,10 +1,13 @@
 {
   "dmo.skills": "Skills",
+  "dmo.skills.progress": "%d / %d EXP",
+  "dmo.skills.inventory.back": "Inventory",
 
   "dmo.skills.gathering": "Gathering",
   "dmo.skills.gathering.lumbering": "Lumbering",
   "dmo.skills.gathering.mining": "Mining",
   "dmo.skills.gathering.foraging": "Foraging",
+  "dmo.skills.gathering.fishing": "Fishing",
 
   "dmo.skills.farming": "Farming",
   "dmo.skills.farming.cultivation": "Cultivation",
@@ -15,11 +18,12 @@
 
   "dmo.skills.explorer": "Explorer",
   "dmo.skills.explorer.cartography": "Cartography",
-  "dmo.skills.explorer.architecture": "Architecture",
+  "dmo.skills.explorer.dungeoneer": "Dungeoneer",
 
   "dmo.skills.combat": "Combat",
   "dmo.skills.combat.melee": "Melee",
   "dmo.skills.combat.archery": "Archery",
+  "dmo.skills.combat.hunter": "Hunter",
 
   "dmo.skills.crafting": "Crafting",
   "dmo.skills.crafting.alchemy": "Alchemy",
