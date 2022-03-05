@@ -17,7 +17,6 @@ import dev.dakoda.dmo.skills.Skill.Sub.METALWORK
 import dev.dakoda.dmo.skills.Skill.Sub.MINING
 import dev.dakoda.dmo.skills.Skill.Sub.TRADING
 import net.minecraft.item.Item
-import net.minecraft.item.Items
 import net.minecraft.item.Items.ANVIL
 import net.minecraft.item.Items.BOW
 import net.minecraft.item.Items.CAKE

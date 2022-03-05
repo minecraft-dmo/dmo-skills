@@ -9,10 +9,6 @@ import net.minecraft.nbt.NbtCompound
 
 class SkillsEXPComponent : ISkillsEXPComponent, AutoSyncedComponent {
 
-    companion object {
-        const val DEFAULT_VALUE = 0
-    }
-
     override var skills: Skills = Skills.BLANK
 
     override fun readFromNbt(tag: NbtCompound) {
@@ -20,7 +16,8 @@ class SkillsEXPComponent : ISkillsEXPComponent, AutoSyncedComponent {
         Skill.all.forEach {
             newMap[it] = EXP(it).apply {
                 with(tag.getSkill(it)) {
-                    raw = this.getInt("exp")
+                    raw = this.getLong("exp")
+                    level = this.getLong("level")
                 }
             }
         }
@@ -32,9 +29,13 @@ class SkillsEXPComponent : ISkillsEXPComponent, AutoSyncedComponent {
 
     override fun writeToNbt(tag: NbtCompound) {
         Skill.all.forEach {
-            tag.put(it.name, NbtCompound().apply {
-                putInt("exp", skills.values[it]?.raw ?: DEFAULT_VALUE)
-            })
+            tag.put(
+                it.name,
+                NbtCompound().apply {
+                    putLong("exp", skills.values[it]?.raw ?: 0)
+                    putLong("level", skills.values[it]?.level ?: 1)
+                }
+            )
         }
     }
 }

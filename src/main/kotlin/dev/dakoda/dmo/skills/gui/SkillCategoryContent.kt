@@ -117,16 +117,26 @@ class SkillCategoryContent(
                 override fun render(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
                     hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height
                     val texVModified = if (hovered) 14f else 0f
-                    val expWidth = ((exp.raw.toFloat() / exp.perLevel.toFloat()) * BAR_WIDTH.toFloat()).roundToInt()
+                    val expWidth = ((exp.raw.toFloat() / Skills.EXP.perLevel) * BAR_WIDTH.toFloat()).roundToInt()
 
                     RenderSystem.setShaderTexture(0, ICONS_TEXTURE)
                     DrawableHelper.drawTexture(matrices, xx, yy, 0f, texVModified + 0f, BAR_WIDTH, height, 200, 200)
                     DrawableHelper.drawTexture(matrices, xx, yy, 0f, texVModified + 7f, expWidth, height, 200, 200)
 
+                    if (exp.level > 1) {
+                        val text = LiteralText(exp.level.toString())
+                        val levelTextX = xx.toFloat() + (BAR_WIDTH / 2)
+                        val levelTextY = yy.toFloat() - 4f
+                        game.textRenderer.draw(matrices, text, levelTextX - 1f, levelTextY + 0f, 0x000000)
+                        game.textRenderer.draw(matrices, text, levelTextX + 1f, levelTextY + 0f, 0x000000)
+                        game.textRenderer.draw(matrices, text, levelTextX + 0f, levelTextY - 1f, 0x000000)
+                        game.textRenderer.draw(matrices, text, levelTextX + 0f, levelTextY + 1f, 0x000000)
+                        game.textRenderer.draw(matrices, text, levelTextX + 0f, levelTextY + 0f, 0x4ae0f7)
+                    }
                     if (isHovered) {
                         game.currentScreen?.renderTooltip(
                             matrices,
-                            TranslatableText("dmo.skills.progress", exp.raw, exp.perLevel),
+                            TranslatableText("dmo.skills.progress", exp.raw, Skills.EXP.perLevel),
                             mouseX, mouseY
                         )
                     }

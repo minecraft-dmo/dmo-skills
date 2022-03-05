@@ -4,24 +4,15 @@ import com.mojang.blaze3d.systems.RenderSystem
 import dev.dakoda.dmo.skills.DMOIdentifiers
 import dev.dakoda.dmo.skills.ModHelper.game
 import dev.dakoda.dmo.skills.ModHelper.leftOfInventory
-import dev.dakoda.dmo.skills.ModHelper.resource
 import dev.dakoda.dmo.skills.ModHelper.rightOfInventory
 import dev.dakoda.dmo.skills.ModHelper.topOfInventory
 import dev.dakoda.dmo.skills.Skill
-import dev.dakoda.dmo.skills.TrackableSkill
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget.PressAction
 import net.minecraft.client.gui.widget.TexturedButtonWidget
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
 import net.minecraft.item.Items.CHEST
-import net.minecraft.item.Items.COMPASS
-import net.minecraft.item.Items.EMERALD
-import net.minecraft.item.Items.IRON_SWORD
-import net.minecraft.item.Items.POTION
-import net.minecraft.item.Items.RAW_IRON
-import net.minecraft.item.Items.WHEAT
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 

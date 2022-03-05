@@ -16,12 +16,14 @@ import org.lwjgl.glfw.GLFW
 class ClientDMOSkills : ClientModInitializer {
 
     companion object {
-        val KEYBINDING_SKILLS_MENU: KeyBinding = KeyBindingHelper.registerKeyBinding(KeyBinding(
-            "dmo.skills.keybindings.open_skills_menu",
-            InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_K,
-            "dmo.skills.keybindings.category",
-        ))
+        val KEYBINDING_SKILLS_MENU: KeyBinding = KeyBindingHelper.registerKeyBinding(
+            KeyBinding(
+                "dmo.skills.keybindings.open_skills_menu",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_K,
+                "dmo.skills.keybindings.category",
+            )
+        )
     }
 
     override fun onInitializeClient() {

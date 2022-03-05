@@ -15,31 +15,32 @@ class Skills(
     private fun increment(inc: Int, trackableSkill: TrackableSkill) {
         if (trackableSkill is Skill) return
         if (trackableSkill in values.keys) {
-            val before = values[trackableSkill]?.raw
+            val beforeLevel = values[trackableSkill]?.level
+            val beforeEXP = values[trackableSkill]?.raw
 
             val exp = values[trackableSkill] ?: return
             with(exp) {
                 val i = (raw + inc)
-                if (i >= perLevel) {
-                    println("level is $level")
-                    println("perLevel is $perLevel")
-                    var n = i
-                    println("n started at $n")
-                    while (i >= perLevel) {
-                        println("n decreased to ${n - perLevel}")
-                        n -= perLevel
-                        level++
-                    }
-                    println("n finished at $n")
-                    println("Level increased to $level, EXP set to $n")
-                    raw = n
+                val l = this.level
+                if (i >= EXP.perLevel) {
+                    val levels = i / EXP.perLevel
+                    val leftOver = i % EXP.perLevel
+                    values[trackableSkill] = (
+                        values[trackableSkill]?.apply {
+                            raw = leftOver
+                            level = l + levels
+                        } ?: return
+                        )
+                    println("${trackableSkill.name} level was $beforeLevel, increased to ${values[trackableSkill]?.level} ")
                 } else {
-                    raw = i
+                    values[trackableSkill] = (
+                        values[trackableSkill]?.apply {
+                            raw = i
+                        } ?: return
+                        )
                 }
             }
-
-            values[trackableSkill]?.raw = ((before ?: 0) + inc)
-            println("${trackableSkill.name} EXP was $before, increased to ${values[trackableSkill]?.raw}")
+            println("${trackableSkill.name} EXP was $beforeEXP, increased to ${values[trackableSkill]?.raw}")
         }
     }
 
@@ -50,9 +51,9 @@ class Skills(
     fun levelOf(skill: Skill) = levelOf(skill as TrackableSkill)
     fun levelOf(subSkill: Skill.Sub) = levelOf(subSkill as TrackableSkill)
 
-    private fun levelOf(trackableSkill: TrackableSkill): Int {
+    private fun levelOf(trackableSkill: TrackableSkill): Long {
         if (trackableSkill is Skill) trackableSkill.updateRaw()
-        return values[trackableSkill]?.level ?: 0
+        return values[trackableSkill]?.level ?: 0L
     }
 
     private fun Skill.updateRaw() {
@@ -95,16 +96,13 @@ class Skills(
         constructor(subSkill: Skill.Sub) : this(subSkill as TrackableSkill)
 
         companion object {
-            const val baseExpPerLevel = 10
+            const val perLevel = 100
 
             val NULL get() = EXP(Skill.NULL)
         }
 
-        val perLevel: Int
-            get() = baseExpPerLevel + (12 * level)
-
-        var raw: Int = 0
-        var level: Int = 0
+        var raw: Long = 0
+        var level: Long = 1
     }
 
     companion object {
