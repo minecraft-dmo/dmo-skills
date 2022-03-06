@@ -9,10 +9,9 @@ class Skills(
      * These methods exist for auto-completion, because IntelliJ
      * can't suggest [TrackableSkill] enums.
      */
-    fun increment(inc: Int, skill: Skill) = increment(inc, skill as TrackableSkill)
-    fun increment(inc: Int, subSkill: Skill.Sub) = increment(inc, subSkill as TrackableSkill)
+    fun increase(inc: Int, subSkill: Skill.Sub) = increase(inc, subSkill as TrackableSkill)
 
-    private fun increment(inc: Int, trackableSkill: TrackableSkill) {
+    private fun increase(inc: Int, trackableSkill: TrackableSkill) {
         if (trackableSkill is Skill) return
         if (trackableSkill in values.keys) {
             val beforeLevel = values[trackableSkill]?.level

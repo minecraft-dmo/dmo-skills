@@ -49,8 +49,8 @@ class SkillCategoryContent(
             val decorY: Int = window.topOfInventory + 4
             RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1f)
             RenderSystem.setShaderTexture(0, ICONS_TEXTURE)
-            drawTexture(matrices, decorX, decorY, 0f, 64f, 146, 8, 200, 200)
-            drawTexture(matrices, decorX, decorY + 144, 0f, 64f, 146, 8, 200, 200)
+            drawTexture(matrices, decorX, decorY, 0f, 69f, 146, 8, 200, 200)
+            drawTexture(matrices, decorX, decorY + 144, 0f, 69f, 146, 8, 200, 200)
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
             game.textRenderer.draw(
                 matrices,
@@ -95,7 +95,7 @@ class SkillCategoryContent(
                     val isTracked = COMP_SKILLS_TRACKED.get(game.player).trackedSkills[exp.skill] == 1
                     RenderSystem.setShaderTexture(0, ICONS_TEXTURE)
                     val texVModified = if (isTracked) 12f else 0f
-                    DrawableHelper.drawTexture(matrices, x, y, 0f, texVModified + 39f, 12, 12, 200, 200)
+                    DrawableHelper.drawTexture(matrices, x, y, 0f, texVModified + 44f, 12, 12, 200, 200)
                     super.render(matrices, mouseX, mouseY, delta)
                 }
 
@@ -125,7 +125,7 @@ class SkillCategoryContent(
 
                     if (exp.level > 1) {
                         val text = LiteralText(exp.level.toString())
-                        val levelTextX = xx.toFloat() + (BAR_WIDTH / 2)
+                        val levelTextX = xx.toFloat() + (BAR_WIDTH / 2) - 2f
                         val levelTextY = yy.toFloat() - 4f
                         game.textRenderer.draw(matrices, text, levelTextX - 1f, levelTextY + 0f, 0x000000)
                         game.textRenderer.draw(matrices, text, levelTextX + 1f, levelTextY + 0f, 0x000000)

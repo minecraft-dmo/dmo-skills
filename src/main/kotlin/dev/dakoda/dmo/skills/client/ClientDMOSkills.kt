@@ -1,6 +1,9 @@
 package dev.dakoda.dmo.skills.client
 
 import dev.dakoda.dmo.skills.ModHelper.buttons
+import dev.dakoda.dmo.skills.ModHelper.game
+import dev.dakoda.dmo.skills.Skill
+import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget
 import dev.dakoda.dmo.skills.gui.SkillsScreen
 import net.fabricmc.api.ClientModInitializer
@@ -11,6 +14,10 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.util.InputUtil
+import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.util.ActionResult
+import net.minecraft.util.ActionResult.PASS
+import net.minecraft.util.ActionResult.SUCCESS
 import org.lwjgl.glfw.GLFW
 
 class ClientDMOSkills : ClientModInitializer {
@@ -30,6 +37,14 @@ class ClientDMOSkills : ClientModInitializer {
         registerKeybindings()
         addSkillsButtonToInventory()
         HudRenderCallback.EVENT.register(ClientTrackedSkillHUD.LISTENER)
+        PlayerGainEXPCallback.EVENT.register(object : PlayerGainEXPCallback {
+            override fun handle(playerEntity: ServerPlayerEntity, increase: Pair<Int, Skill.Sub>): ActionResult {
+                if (playerEntity.uuid == game.player?.uuid) {
+                    return SUCCESS
+                }
+                return PASS
+            }
+        })
     }
 
     private fun registerKeybindings() {
