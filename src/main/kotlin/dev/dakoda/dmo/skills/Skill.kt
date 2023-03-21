@@ -1,22 +1,8 @@
 package dev.dakoda.dmo.skills
 
-import dev.dakoda.dmo.skills.Skill.Sub.ALCHEMY
-import dev.dakoda.dmo.skills.Skill.Sub.ANIMAL_CARE
-import dev.dakoda.dmo.skills.Skill.Sub.ARCHERY
-import dev.dakoda.dmo.skills.Skill.Sub.CARTOGRAPHY
-import dev.dakoda.dmo.skills.Skill.Sub.COOKING
-import dev.dakoda.dmo.skills.Skill.Sub.CULTIVATION
-import dev.dakoda.dmo.skills.Skill.Sub.DUNGEONEER
-import dev.dakoda.dmo.skills.Skill.Sub.ENCHANTING
-import dev.dakoda.dmo.skills.Skill.Sub.FISHING
-import dev.dakoda.dmo.skills.Skill.Sub.FORAGING
-import dev.dakoda.dmo.skills.Skill.Sub.HUNTER
-import dev.dakoda.dmo.skills.Skill.Sub.LUMBERING
-import dev.dakoda.dmo.skills.Skill.Sub.MELEE
-import dev.dakoda.dmo.skills.Skill.Sub.METALWORK
-import dev.dakoda.dmo.skills.Skill.Sub.MINING
-import dev.dakoda.dmo.skills.Skill.Sub.TRADING
+import dev.dakoda.dmo.skills.SkillRegistry.register
 import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.item.Items.ANVIL
 import net.minecraft.item.Items.BOW
 import net.minecraft.item.Items.CAKE
@@ -36,43 +22,97 @@ import net.minecraft.item.Items.TROPICAL_FISH
 import net.minecraft.item.Items.WHEAT
 import net.minecraft.text.TranslatableText
 
-enum class Skill(val icon: Item, vararg val subSkills: Sub) : TrackableSkill {
+object SkillRegistry {
 
-    NULL(icon = STONE),
-    GATHERING(icon = OAK_SAPLING, subSkills = arrayOf(LUMBERING, MINING, FORAGING, FISHING)),
-    FARMING(icon = WHEAT, subSkills = arrayOf(CULTIVATION, ANIMAL_CARE)),
-    MERCHANT(icon = EMERALD, subSkills = arrayOf(TRADING)),
-    EXPLORER(icon = COMPASS, subSkills = arrayOf(CARTOGRAPHY, DUNGEONEER)),
-    COMBAT(icon = IRON_SWORD, subSkills = arrayOf(MELEE, ARCHERY, HUNTER)),
-    CRAFTING(icon = POTION, subSkills = arrayOf(ALCHEMY, ENCHANTING, METALWORK, COOKING));
+    val registered: MutableList<Skill> = mutableListOf()
 
-    init {
+    fun SubSkill.register(): SubSkill {
+        registered.add(this)
+        return this
+    }
+
+    fun SkillCategory.register(): SkillCategory {
         this.subSkills.forEach {
             it.parent = this
         }
+        registered.add(this)
+        return this
     }
+}
 
-    override fun stack() = icon.defaultStack
+sealed class Skill(
+    val name: String,
+    val icon: Item,
+) {
+    val translatableText get() = TranslatableText("dmo.skills.${name.lowercase()}")
 
-    override val translatableText get() = TranslatableText("dmo.skills.${name.lowercase()}")
+    fun stack(): ItemStack = icon.defaultStack
 
     companion object {
-        val all: List<TrackableSkill> get() = (values().toList() + Sub.values())
+        val allCategories: List<SkillCategory> get() = SkillRegistry.registered.filterIsInstance<SkillCategory>()
+        val allSubSkills: List<SubSkill> get() = SkillRegistry.registered.filterIsInstance<SubSkill>()
+        val all get() = allCategories + allSubSkills
+
+        val LUMBERING = SubSkill(name = "LUMBERING", icon = OAK_SAPLING).register()
+        val MINING = SubSkill(name = "MINING", icon = RAW_COPPER).register()
+        val FORAGING = SubSkill(name = "FORAGING", icon = SWEET_BERRIES).register()
+        val FISHING = SubSkill(name = "FISHING", icon = TROPICAL_FISH).register()
+        val CULTIVATION = SubSkill(name = "CULTIVATION", icon = WHEAT).register()
+        val ANIMAL_CARE = SubSkill(name = "ANIMAL_CARE", icon = MILK_BUCKET).register()
+        val TRADING = SubSkill(name = "TRADING", icon = EMERALD).register()
+        val CARTOGRAPHY = SubSkill(name = "CARTOGRAPHY", icon = COMPASS).register()
+        val DUNGEONEER = SubSkill(name = "DUNGEONEER", icon = CHEST_MINECART).register()
+        val MELEE = SubSkill(name = "MELEE", icon = IRON_SWORD).register()
+        val ARCHERY = SubSkill(name = "ARCHERY", icon = BOW).register()
+        val HUNTER = SubSkill(name = "HUNTER", icon = NETHER_STAR).register()
+        val ALCHEMY = SubSkill(name = "ALCHEMY", icon = POTION).register()
+        val ENCHANTING = SubSkill(name = "ENCHANTING", icon = ENCHANTED_BOOK).register()
+        val METALWORK = SubSkill(name = "METALWORK", icon = ANVIL).register()
+        val COOKING = SubSkill(name = "COOKING", icon = CAKE).register()
+
+        val NULL = SkillCategory(name = "NULL", icon = STONE)
+        val GATHERING = SkillCategory(
+            name = "GATHERING", icon = OAK_SAPLING,
+            subSkills = arrayOf(
+                LUMBERING, MINING, FORAGING, FISHING
+            )
+        ).register()
+        val FARMING = SkillCategory(
+            name = "FARMING", icon = WHEAT,
+            subSkills = arrayOf(
+                CULTIVATION, ANIMAL_CARE
+            )
+        ).register()
+        val MERCHANT = SkillCategory(
+            name = "MERCHANT", icon = EMERALD,
+            subSkills = arrayOf(
+                TRADING
+            )
+        ).register()
+        val EXPLORER = SkillCategory(
+            name = "EXPLORER", icon = COMPASS,
+            subSkills = arrayOf(
+                CARTOGRAPHY, DUNGEONEER
+            )
+        ).register()
+        val COMBAT = SkillCategory(
+            name = "COMBAT", icon = IRON_SWORD,
+            subSkills = arrayOf(
+                MELEE, ARCHERY, HUNTER
+            )
+        ).register()
+        val CRAFTING = SkillCategory(
+            name = "CRAFTING", icon = POTION,
+            subSkills = arrayOf(
+                ALCHEMY, ENCHANTING, METALWORK, COOKING
+            )
+        ).register()
     }
+}
 
-    enum class Sub(val icon: Item) : TrackableSkill {
+class SkillCategory(name: String, icon: Item, vararg val subSkills: SubSkill) : Skill(name, icon)
 
-        LUMBERING(icon = OAK_SAPLING), MINING(icon = RAW_COPPER), FORAGING(icon = SWEET_BERRIES), FISHING(icon = TROPICAL_FISH),
-        CULTIVATION(icon = WHEAT), ANIMAL_CARE(icon = MILK_BUCKET),
-        TRADING(icon = EMERALD),
-        CARTOGRAPHY(icon = COMPASS), DUNGEONEER(icon = CHEST_MINECART),
-        MELEE(icon = IRON_SWORD), ARCHERY(icon = BOW), HUNTER(icon = NETHER_STAR),
-        ALCHEMY(icon = POTION), ENCHANTING(icon = ENCHANTED_BOOK), METALWORK(icon = ANVIL), COOKING(icon = CAKE);
+class SubSkill(name: String, icon: Item) : Skill(name, icon) {
 
-        lateinit var parent: Skill
-
-        override fun stack() = icon.defaultStack
-
-        override val translatableText get() = TranslatableText("dmo.skills.${parent.name.lowercase()}.${name.lowercase()}")
-    }
+    lateinit var parent: SkillCategory
 }

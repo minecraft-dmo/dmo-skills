@@ -10,9 +10,14 @@ import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ClickableWidget
 import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.client.util.Window
+import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.enchantment.Enchantments.SILK_TOUCH
+import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.Util.NIL_UUID
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 
 object ModHelper {
     const val modID = "dmo-skills"
@@ -31,4 +36,11 @@ object ModHelper {
     val Window.leftOfInventory get() = (this.scaledWidth / 2) - 110
     val Window.rightOfInventory get() = (this.scaledWidth / 2) + 90
     val Window.topOfInventory get() = (this.scaledHeight / 2) - 80
+
+    val ItemStack.hasSilkTouch get() = SILK_TOUCH in EnchantmentHelper.get(this).keys
+    val ItemStack.hasAnyEnchantment get() = EnchantmentHelper.get(this).isNotEmpty()
+
+    fun BlockPos.horizontals(world: World) = listOf(north(), east(), south(), west()).map {
+        world.getBlockState(it)
+    }
 }

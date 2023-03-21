@@ -2,8 +2,9 @@ package dev.dakoda.dmo.skills.gui
 
 import dev.dakoda.dmo.skills.ModHelper.game
 import dev.dakoda.dmo.skills.Skill
-import dev.dakoda.dmo.skills.Skill.GATHERING
-import dev.dakoda.dmo.skills.Skill.NULL
+import dev.dakoda.dmo.skills.Skill.Companion.GATHERING
+import dev.dakoda.dmo.skills.Skill.Companion.NULL
+import dev.dakoda.dmo.skills.SkillCategory
 import dev.dakoda.dmo.skills.client.ClientDMOSkills.Companion.KEYBINDING_SKILLS_MENU
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget.Companion.BUTTON_SEPARATE
@@ -33,19 +34,19 @@ class SkillsScreen : CottonClientScreen(object : LightweightGuiDescription() {
 
     override fun shouldPause() = false
 
-    private val categories = Skill.values().filter { it != NULL }
+    private val categories = Skill.allCategories.filter { it != NULL }
 
-    private val activeCategory: Skill
+    private val activeCategory: SkillCategory
         get() = TrackLastCategory.last
 
     private val activeCategoryContent: SkillCategoryContent
         get() = SkillCategoryContent.of(activeCategory)
 
     object TrackLastCategory {
-        var last: Skill = GATHERING
+        var last: SkillCategory = GATHERING
     }
 
-    private fun swapCategory(skill: Skill) {
+    private fun swapCategory(skill: SkillCategory) {
         if (skill in categories) TrackLastCategory.last = skill
         init()
     }

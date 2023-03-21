@@ -4,6 +4,7 @@
   "package": "dev.dakoda.dmo.skills.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "FishingBobberEntityMixin"
   ],
   "client": [],
   "injectors": {

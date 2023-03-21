@@ -6,7 +6,7 @@ import dev.dakoda.dmo.skills.ModHelper.game
 import dev.dakoda.dmo.skills.ModHelper.leftOfInventory
 import dev.dakoda.dmo.skills.ModHelper.rightOfInventory
 import dev.dakoda.dmo.skills.ModHelper.topOfInventory
-import dev.dakoda.dmo.skills.Skill
+import dev.dakoda.dmo.skills.SkillCategory
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget.PressAction
 import net.minecraft.client.gui.widget.TexturedButtonWidget
@@ -22,13 +22,13 @@ class SkillCategoryWidget(
     y: Int = 0,
     width: Int = 20,
     height: Int = 20,
-    override var texU: Int = 0,
-    override var texV: Int = 0,
-    override var hoveredVOffset: Int = height,
+    var texU: Int = 0,
+    var texV: Int = 0,
+    var hoveredVOffset: Int = height,
     var tex: Identifier = DMOIdentifiers.WIDGETS_TEXTURE,
-    override var texW: Int = width,
-    override var texH: Int = height * 2,
-) : TexturedButtonWidget(x, y, width, height, texU, texV, hoveredVOffset, tex, texW, texH, pressAction), DMOWidget {
+    texW: Int = width,
+    texH: Int = height * 2,
+) : TexturedButtonWidget(x, y, width, height, texU, texV, hoveredVOffset, tex, texW, texH, pressAction) {
 
     private val window get() = game.window
 
@@ -115,7 +115,7 @@ class SkillCategoryWidget(
 
         fun makeCategoryButton(
             screen: Screen?,
-            skill: Skill,
+            skill: SkillCategory,
             xOffset: Int = 0,
             yOffset: Int = 0,
             pressAction: PressAction,

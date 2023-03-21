@@ -2,97 +2,81 @@ package dev.dakoda.dmo.skills
 
 class Skills(
 
-    val values: MutableMap<TrackableSkill, EXP> = mutableMapOf()
+    val values: MutableMap<Skill, EXP> = mutableMapOf()
 ) {
 
     /**
      * These methods exist for auto-completion, because IntelliJ
      * can't suggest [TrackableSkill] enums.
      */
-    fun increase(inc: Int, subSkill: Skill.Sub) = increase(inc, subSkill as TrackableSkill)
+    fun increase(inc: Int, subSkill: SubSkill) = increase(inc, subSkill as Skill)
 
-    private fun increase(inc: Int, trackableSkill: TrackableSkill) {
-        if (trackableSkill is Skill) return
-        if (trackableSkill in values.keys) {
-            val beforeLevel = values[trackableSkill]?.level
-            val beforeEXP = values[trackableSkill]?.raw
+    private fun increase(inc: Int, skill: Skill) {
+        if (skill is SkillCategory) return
+        if (skill in values.keys) {
+            val beforeLevel = values[skill]?.level
+            val beforeEXP = values[skill]?.raw
 
-            val exp = values[trackableSkill] ?: return
+            val exp = values[skill] ?: return
             with(exp) {
                 val i = (raw + inc)
                 val l = this.level
                 if (i >= EXP.perLevel) {
                     val levels = i / EXP.perLevel
                     val leftOver = i % EXP.perLevel
-                    values[trackableSkill] = (
-                        values[trackableSkill]?.apply {
+                    values[skill] = (
+                        values[skill]?.apply {
                             raw = leftOver
                             level = l + levels
                         } ?: return
                         )
-                    println("${trackableSkill.name} level was $beforeLevel, increased to ${values[trackableSkill]?.level} ")
+                    println("${skill.name} level was $beforeLevel, increased to ${values[skill]?.level} ")
                 } else {
-                    values[trackableSkill] = (
-                        values[trackableSkill]?.apply {
+                    values[skill] = (
+                        values[skill]?.apply {
                             raw = i
                         } ?: return
                         )
                 }
             }
-            println("${trackableSkill.name} EXP was $beforeEXP, increased to ${values[trackableSkill]?.raw}")
+            println("${skill.name} EXP was $beforeEXP, increased to ${values[skill]?.raw}")
         }
     }
 
-    /**
-     * These methods exist for auto-completion, because IntelliJ
-     * can't suggest [TrackableSkill] enums.
-     */
-    fun levelOf(skill: Skill) = levelOf(skill as TrackableSkill)
-    fun levelOf(subSkill: Skill.Sub) = levelOf(subSkill as TrackableSkill)
-
-    private fun levelOf(trackableSkill: TrackableSkill): Long {
-        if (trackableSkill is Skill) trackableSkill.updateRaw()
-        return values[trackableSkill]?.level ?: 0L
+    fun levelOf(skill: Skill): Long {
+        if (skill is SkillCategory) skill.updateRaw()
+        return values[skill]?.level ?: 0L
     }
 
-    private fun Skill.updateRaw() {
+    private fun SkillCategory.updateRaw() {
         values[this]?.raw = this.subSkills.sumOf {
             values[it]?.raw ?: 0
         }
     }
 
     operator fun get(skill: Skill) = progressOf(skill)
-    operator fun get(subSkill: Skill.Sub) = progressOf(subSkill)
-    operator fun get(trackableSkill: TrackableSkill) = progressOf(trackableSkill)
 
-    fun progressOf(trackableSkill: TrackableSkill): EXP {
-        if (trackableSkill is Skill) trackableSkill.updateRaw()
-        return values[trackableSkill] ?: EXP.NULL
+    fun progressOf(skill: Skill): EXP {
+        if (skill is SkillCategory) skill.updateRaw()
+        return values[skill] ?: EXP.NULL
     }
 
-    fun categories(): List<EXP> = Skill.values().mapNotNull {
+    fun categories(): List<EXP> = Skill.allCategories.mapNotNull {
         it.updateRaw()
         values[it]
     }
 
-    fun subSkills(): List<EXP> = Skill.Sub.values().mapNotNull {
+    fun subSkills(): List<EXP> = Skill.allSubSkills.mapNotNull {
         values[it]
     }
 
-    fun subSkills(category: Skill): List<EXP> = category.subSkills.mapNotNull {
+    fun subSkills(category: SkillCategory): List<EXP> = category.subSkills.mapNotNull {
         values[it]
     }
 
     fun all(): List<EXP> = categories() + subSkills()
 
-    class EXP(val skill: TrackableSkill) {
-
-        /**
-         * These constructors exist for auto-completion, because IntelliJ
-         * can't suggest [TrackableSkill] enums.
-         */
-        constructor(skill: Skill) : this(skill as TrackableSkill)
-        constructor(subSkill: Skill.Sub) : this(subSkill as TrackableSkill)
+    class EXP(val skill: Skill) {
 
         companion object {
             const val perLevel = 100
@@ -107,9 +91,9 @@ class Skills(
     companion object {
         val BLANK: Skills
             get() {
-                val values: MutableMap<TrackableSkill, EXP> = mutableMapOf()
-                Skill.all.forEach { trackableSkill: TrackableSkill ->
-                    values[trackableSkill] = EXP(trackableSkill)
+                val values: MutableMap<Skill, EXP> = mutableMapOf()
+                Skill.all.forEach { skill: Skill ->
+                    values[skill] = EXP(skill)
                 }
                 return Skills(values)
             }

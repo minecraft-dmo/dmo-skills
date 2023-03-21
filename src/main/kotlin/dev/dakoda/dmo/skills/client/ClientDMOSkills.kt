@@ -2,7 +2,7 @@ package dev.dakoda.dmo.skills.client
 
 import dev.dakoda.dmo.skills.ModHelper.buttons
 import dev.dakoda.dmo.skills.ModHelper.game
-import dev.dakoda.dmo.skills.Skill
+import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget
 import dev.dakoda.dmo.skills.gui.SkillsScreen
@@ -38,7 +38,7 @@ class ClientDMOSkills : ClientModInitializer {
         addSkillsButtonToInventory()
         HudRenderCallback.EVENT.register(ClientTrackedSkillHUD.LISTENER)
         PlayerGainEXPCallback.EVENT.register(object : PlayerGainEXPCallback {
-            override fun handle(playerEntity: ServerPlayerEntity, increase: Pair<Int, Skill.Sub>): ActionResult {
+            override fun handle(playerEntity: ServerPlayerEntity, increase: Pair<Int, SubSkill>): ActionResult {
                 if (playerEntity.uuid == game.player?.uuid) {
                     return SUCCESS
                 }

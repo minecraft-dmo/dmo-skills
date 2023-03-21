@@ -5,8 +5,9 @@ import dev.dakoda.dmo.skills.DMOIdentifiers.ICONS_TEXTURE
 import dev.dakoda.dmo.skills.ModHelper.game
 import dev.dakoda.dmo.skills.ModHelper.leftOfInventory
 import dev.dakoda.dmo.skills.ModHelper.topOfInventory
-import dev.dakoda.dmo.skills.Skill
+import dev.dakoda.dmo.skills.SkillCategory
 import dev.dakoda.dmo.skills.Skills
+import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_TRACKED
 import dev.dakoda.dmo.skills.component.SkillsTrackedComponent
 import net.minecraft.client.gui.Drawable
@@ -21,7 +22,7 @@ import kotlin.math.roundToInt
 private const val BAR_WIDTH = 144
 
 class SkillCategoryContent(
-    private val category: Skill,
+    private val category: SkillCategory,
     private val translationPrefix: String
 ) : DrawableHelper() {
 
@@ -87,7 +88,7 @@ class SkillCategoryContent(
             object : ButtonWidget(
                 titleX().toInt() + BAR_WIDTH - 16, titleY(index).toInt() - 2, 12, 12, Text.of(""), {
                     println("Toggling pin for ${exp.skill.name}")
-                    (COMP_SKILLS_TRACKED.get(game.player) as SkillsTrackedComponent).toggle(exp.skill as Skill.Sub)
+                    (COMP_SKILLS_TRACKED.get(game.player) as SkillsTrackedComponent).toggle(exp.skill as SubSkill)
                     COMP_SKILLS_TRACKED.sync(game.player)
                 }
             ) {
@@ -147,6 +148,6 @@ class SkillCategoryContent(
 
     companion object {
 
-        fun of(skill: Skill) = SkillCategoryContent(skill, "dmo.skills.${skill.name.lowercase()}")
+        fun of(skill: SkillCategory) = SkillCategoryContent(skill, "dmo.skills.${skill.name.lowercase()}")
     }
 }

@@ -5,6 +5,7 @@ import dev.dakoda.dmo.skills.DMOIdentifiers.ICONS_TEXTURE
 import dev.dakoda.dmo.skills.ModHelper.game
 import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.Skills.EXP.Companion.perLevel
+import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_TRACKED
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
@@ -15,14 +16,14 @@ import kotlin.math.roundToLong
 
 object ClientTrackedSkillHUD : DrawableHelper() {
 
-    private var olds: MutableMap<Skill.Sub, Long>? = null
+    private var olds: MutableMap<SubSkill, Long>? = null
 
-    private fun Skill.Sub.old() = olds!![this]
+    private fun SubSkill.old() = olds!![this]
 
     val LISTENER: HudRenderCallback = HudRenderCallback { matrices, tickDelta ->
         if (olds == null) {
             val skills = COMP_SKILLS_EXP.get(game.player).skills
-            olds = Skill.Sub.values().associateWith {
+            olds = Skill.allSubSkills.associateWith {
                 skills.progressOf(it).raw
             }.toMutableMap()
         }
@@ -35,7 +36,7 @@ object ClientTrackedSkillHUD : DrawableHelper() {
         val trackerStartY = 12
         val trackerDivider = 16
         toTrack.forEachIndexed { index, exp ->
-            if (exp.skill is Skill.Sub) {
+            if (exp.skill is SubSkill) {
                 val y = trackerStartY + (index * trackerDivider)
                 val barWidth = 62
                 val expWidth = ((exp.raw.toFloat() / perLevel) * barWidth.toFloat()).roundToInt()
@@ -43,30 +44,16 @@ object ClientTrackedSkillHUD : DrawableHelper() {
                 val xx = trackerStartX + 10
                 val yy = y - 2
                 drawTexture(matrices, xx, yy, 1f, 29f, barWidth, 5, 200, 200)
-                // drawTexture(matrices, xx, yy, 1f, 39f, expWidth, 5, 200, 200)
 
                 game.itemRenderer.renderGuiItemIcon(exp.skill.stack(), trackerStartX - 8, y - 8)
 
                 if ((exp.skill in olds!!)) {
                     var old = exp.skill.old() ?: 0L
                     if (exp.raw < old) {
-                        println("more")
                         old = 0L
                     }
 
-                    if (old == exp.raw) {
-                        println()
-                    }
-
-                    if (old > exp.raw) {
-                        println("more")
-                        println("old: ${exp.skill.old()}")
-                        println("raw: ${exp.raw}")
-                        old = exp.raw
-                    }
-
                     if (old < exp.raw) {
-                        println("less")
                         if (old + tickDelta > exp.raw) {
                             old = exp.raw
                         } else {
@@ -81,7 +68,6 @@ object ClientTrackedSkillHUD : DrawableHelper() {
                         drawTexture(matrices, xx, yy, 1f, 39f, expWidth, 5, 200, 200)
                         drawTexture(matrices, xx, yy, 1f, 34f, oldExpWidth, 5, 200, 200)
                     } else if (old == exp.raw) {
-                        println("equal")
                         RenderSystem.setShaderTexture(0, ICONS_TEXTURE)
                         drawTexture(matrices, xx, yy, 1f, 34f, expWidth, 5, 200, 200)
                     }
