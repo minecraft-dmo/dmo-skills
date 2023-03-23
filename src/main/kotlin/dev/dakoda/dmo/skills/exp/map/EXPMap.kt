@@ -26,7 +26,7 @@ class EXPMap<T, R : EXPGain.Rules> {
 
     data class Entry<R : EXPGain.Rules>(
         val expGainProvider: EXPGain.Provider,
-        val requirements: EXPGain.Rules = EXPGain.Rules(),
+        val rules: R,
         val settings: Settings = Settings()
     ) {
         data class Settings(val order: Order = Order.AFTER) {

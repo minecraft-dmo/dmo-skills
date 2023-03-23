@@ -1,21 +1,35 @@
 package dev.dakoda.dmo.skills.exp
 
+import dev.dakoda.dmo.skills.ModHelper.CONFIG
 import dev.dakoda.dmo.skills.ModHelper.horizontals
 import dev.dakoda.dmo.skills.Skill.Companion.CULTIVATION
+import dev.dakoda.dmo.skills.Skill.Companion.DUNGEONEER
+import dev.dakoda.dmo.skills.Skill.Companion.FORAGING
 import dev.dakoda.dmo.skills.Skill.Companion.LUMBERING
 import dev.dakoda.dmo.skills.Skill.Companion.MINING
+import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.exp.BreakBlockChecker.callback
 import dev.dakoda.dmo.skills.exp.BreakBlockChecker.flat
 import dev.dakoda.dmo.skills.exp.BreakBlockChecker.rules
+import dev.dakoda.dmo.skills.exp.BreakBlockChecker.settings
+import dev.dakoda.dmo.skills.exp.map.EXPMap
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.BEFORE
+import dev.dakoda.dmo.skills.mixin.dungeoneer.LootableContainerBlockEntityAccessor
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags.AXES
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags.PICKAXES
 import net.minecraft.block.AttachedStemBlock
+import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.CropBlock
 import net.minecraft.block.NetherWartBlock
 import net.minecraft.block.StemBlock
+import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.ChestBlockEntity
 import net.minecraft.registry.tag.BlockTags
 import net.minecraft.state.property.Properties
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 import java.lang.IllegalArgumentException
 
 object BreakBlockChecker : AbstractBreakBlockChecker({
@@ -66,4 +80,31 @@ object BreakBlockChecker : AbstractBreakBlockChecker({
         }
         null
     }
+    registry[Blocks.MELON] = flat(6 to CULTIVATION, rules(false))
+
+    // -- Foraging --
+    registry[Blocks.SWEET_BERRY_BUSH] = callback { state, _, _, _ ->
+        when(state.get(Properties.AGE_3)) {
+            2 -> 3 to FORAGING
+            3 -> 5 to FORAGING
+            else -> null
+        }
+    }
+    registry[BlockTags.CAVE_VINES] = callback { state, _, _, _ ->
+        if (state.get(Properties.BERRIES)) 5 to FORAGING else null
+    }
+
+    // -- Dungeoneer --
+    val lootableContainerCallback: (BlockState, BlockPos, BlockEntity?, World) -> Pair<Int, SubSkill>? = lambda@{ state: BlockState, pos: BlockPos, entity: BlockEntity?, world: World ->
+        if (entity != null && entity is ChestBlockEntity) {
+            val chestBlockEntity = entity as LootableContainerBlockEntityAccessor
+            if (chestBlockEntity.lootTableId != null) {
+                return@lambda CONFIG.exp.dungeoneer.sources.break_.chest to DUNGEONEER
+            }
+        }
+        return@lambda null
+    }
+    registry[Blocks.CHEST] = callback(settings = settings(order = BEFORE), callback = lootableContainerCallback)
+    registry[Blocks.TRAPPED_CHEST] = callback(settings = settings(order = BEFORE), callback = lootableContainerCallback)
+    registry[Blocks.BARREL] = callback(settings = settings(order = BEFORE), callback = lootableContainerCallback)
 })

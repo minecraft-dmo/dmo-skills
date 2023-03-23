@@ -1,5 +1,7 @@
 package dev.dakoda.dmo.skills
 
+import dev.dakoda.dmo.skills.exp.EXPGain
+
 class Skills(
 
     val values: MutableMap<Skill, EXP> = mutableMapOf()
@@ -11,6 +13,7 @@ class Skills(
      */
     fun increase(inc: Int, subSkill: SubSkill) = increase(inc, subSkill as Skill)
 
+    fun increase(gain: EXPGain) = increase(gain.amount, gain.skill)
     fun increase(gain: Pair<Int, SubSkill>) = increase(gain.first, gain.second as Skill)
 
     private fun increase(inc: Int, skill: Skill) {

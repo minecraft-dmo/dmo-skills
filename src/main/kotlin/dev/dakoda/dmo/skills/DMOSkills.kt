@@ -4,10 +4,13 @@ import com.google.gson.GsonBuilder
 import dev.dakoda.dmo.skills.ModHelper.CONFIG
 import dev.dakoda.dmo.skills.ModHelper.LOGGER
 import dev.dakoda.dmo.skills.config.DMOSkillsConfig
-import dev.dakoda.dmo.skills.exp.BreakBlockEXPCheckerOld
-import dev.dakoda.dmo.skills.exp.BreakBlockEXPCheckerOld.Settings.Order
+import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker
+import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockParams
+import dev.dakoda.dmo.skills.exp.BreakBlockChecker
 import dev.dakoda.dmo.skills.exp.CombatEXPCheckerOld
 import dev.dakoda.dmo.skills.exp.UseBlockEXPCheckerOld
+import dev.dakoda.dmo.skills.exp.map.EXPMap
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback
@@ -48,7 +51,9 @@ class DMOSkills : ModInitializer {
 
         PlayerBlockBreakEvents.AFTER.register { world, player, blockPos, blockState, blockEntity ->
             if (player.isSurvival) {
-                BreakBlockEXPCheckerOld.doEXPGain(blockState, blockPos, world, blockEntity, player.mainHandStack, Order.AFTER)?.let {
+                BreakBlockChecker.resolve(BreakBlockParams(
+                    blockState, blockPos, blockEntity, world, player.mainHandStack
+                ), Order.AFTER)?.let {
                     ModHelper.gainEXP(player, it)
                 }
             }
@@ -56,7 +61,9 @@ class DMOSkills : ModInitializer {
 
         PlayerBlockBreakEvents.BEFORE.register { world, player, blockPos, blockState, blockEntity ->
             if (player.isSurvival) {
-                BreakBlockEXPCheckerOld.doEXPGain(blockState, blockPos, world, blockEntity, player.mainHandStack, Order.BEFORE)?.let {
+                BreakBlockChecker.resolve(BreakBlockParams(
+                    blockState, blockPos, blockEntity, world, player.mainHandStack
+                ), Order.BEFORE)?.let {
                     ModHelper.gainEXP(player, it)
                 }
             }

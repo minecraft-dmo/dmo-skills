@@ -12,9 +12,9 @@ import net.minecraft.registry.tag.TagKey
 abstract class Checker<Key, Params : EXPGain.Provider.Params, R : EXPGain.Rules> {
     abstract val registry: EXPMap<*, R>
 
-    abstract fun haveEntryFor(key: Key): Boolean
-    abstract fun getEntry(key: Key): EXPMap.Entry<R>?
-    abstract fun resolve(params: Params): EXPGain?
+    abstract fun haveEntryFor(key: Key, order: Settings.Order): Boolean
+    abstract fun getEntry(key: Key, order: Settings.Order): EXPMap.Entry<R>?
+    abstract fun resolve(params: Params, order: Settings.Order): EXPGain?
 
     operator fun <R : EXPGain.Rules> EXPMap<ItemStack, R>.set(item: Item, entry: EXPMap.Entry<R>) = put(KeyMatcher.Items.Generic(item), entry)
     operator fun <R : EXPGain.Rules> EXPMap<ItemStack, R>.set(tag: TagKey<Item>, entry: EXPMap.Entry<R>) = put(KeyMatcher.Items.Tag(tag), entry)

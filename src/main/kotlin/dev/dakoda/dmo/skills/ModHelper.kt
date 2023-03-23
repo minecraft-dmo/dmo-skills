@@ -8,7 +8,7 @@ import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.config.DMOSkillsConfig
 import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
-import dev.dakoda.dmo.skills.gui.toast.DiscoveryToast
+import dev.dakoda.dmo.skills.exp.EXPGain
 import net.fabricmc.fabric.api.client.screen.v1.Screens
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
@@ -20,7 +20,6 @@ import net.minecraft.enchantment.Enchantments.SILK_TOUCH
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
-import net.minecraft.util.ActionResult
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -56,11 +55,11 @@ object ModHelper {
 
     fun gainEXP(player: PlayerEntity, gainAmount: Int, gainSkill: SubSkill) = gainEXP(player, gainAmount to gainSkill)
 
-    fun gainEXP(player: PlayerEntity, gain: Pair<Int, SubSkill>) {
+    fun gainEXP(player: PlayerEntity, gain: EXPGain) {
         val discoveredSkills = COMP_SKILLS_DISCOVERED[player].skillsDiscovered
         var discoveredNewSkill = false
-        if (discoveredSkills[gain.second] != true) {
-            discoveredSkills[gain.second] = true
+        if (discoveredSkills[gain.skill] != true) {
+            discoveredSkills[gain.skill] = true
             discoveredNewSkill = true
         }
 
@@ -70,4 +69,6 @@ object ModHelper {
         COMP_SKILLS_EXP.sync(player)
         COMP_SKILLS_DISCOVERED.sync(player)
     }
+
+    fun gainEXP(player: PlayerEntity, gain: Pair<Int, SubSkill>) = gainEXP(player, EXPGain(gain))
 }
