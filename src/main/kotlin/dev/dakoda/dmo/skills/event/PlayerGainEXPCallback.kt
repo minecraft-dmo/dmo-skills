@@ -3,7 +3,7 @@ package dev.dakoda.dmo.skills.event
 import dev.dakoda.dmo.skills.SubSkill
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
 
 interface PlayerGainEXPCallback {
@@ -13,9 +13,9 @@ interface PlayerGainEXPCallback {
             PlayerGainEXPCallback::class.java
         ) {
             object : PlayerGainEXPCallback {
-                override fun handle(playerEntity: ServerPlayerEntity, increase: Pair<Int, SubSkill>): ActionResult {
+                override fun handle(playerEntity: PlayerEntity, gain: Pair<Int, SubSkill>, discovered: Boolean): ActionResult {
                     for (listener in it) {
-                        val result = listener.handle(playerEntity, increase)
+                        val result = listener.handle(playerEntity, gain, discovered)
                         if (result != ActionResult.PASS) return result
                     }
 
@@ -25,5 +25,5 @@ interface PlayerGainEXPCallback {
         }
     }
 
-    fun handle(playerEntity: ServerPlayerEntity, increase: Pair<Int, SubSkill>): ActionResult
+    fun handle(playerEntity: PlayerEntity, gain: Pair<Int, SubSkill>, discovered: Boolean): ActionResult
 }

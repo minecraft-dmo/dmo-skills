@@ -12,8 +12,9 @@ import net.minecraft.client.gui.widget.ButtonWidget.PressAction
 import net.minecraft.client.gui.widget.TexturedButtonWidget
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import net.minecraft.item.Items.CHEST
-import net.minecraft.text.TranslatableText
+import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 
 class SkillCategoryWidget(
@@ -51,7 +52,6 @@ class SkillCategoryWidget(
     companion object {
 
         private const val U_BLANK_BUTTON = 0
-        private const val U_BOOK_BUTTON = 20
 
         const val BUTTON_SIZE = 20
         const val BUTTON_SEPARATE = BUTTON_SIZE + 2
@@ -65,13 +65,14 @@ class SkillCategoryWidget(
             renderOverride = { matrices, mouseX, mouseY, _ ->
                 RenderSystem.setShaderTexture(0, tex)
                 drawTexture(matrices, x, y, texU.float, texVModified.float, width, height, 100, 100)
+                game.itemRenderer.renderGuiItemIcon(Items.BOOK.defaultStack, x + 2, y + 2)
 
                 if (isHovered) {
-                    screen?.renderTooltip(matrices, TranslatableText("dmo.skills"), mouseX, mouseY)
+                    screen?.renderTooltip(matrices, Text.translatable("dmo.skills"), mouseX, mouseY)
                 }
             }
             x = window.leftOfInventory + xOffset; y = window.topOfInventory + yOffset
-            texU = U_BOOK_BUTTON
+            texU = 0
         }
 
         fun menuInventory(
@@ -86,7 +87,7 @@ class SkillCategoryWidget(
 
                 game.itemRenderer.renderGuiItemIcon(CHEST.defaultStack, x + 2, y + 1)
                 if (isHovered) {
-                    screen?.renderTooltip(matrices, TranslatableText("dmo.skills.inventory.back"), mouseX, mouseY)
+                    screen?.renderTooltip(matrices, Text.translatable("dmo.skills.inventory.back"), mouseX, mouseY)
                 }
             }
             x = window.leftOfInventory + xOffset; y = window.topOfInventory + yOffset
@@ -108,7 +109,7 @@ class SkillCategoryWidget(
                 game.itemRenderer.renderGuiItemIcon(itemIcon, x + 2, y + 2)
 
                 if (isHovered) {
-                    screen?.renderTooltip(matrices, TranslatableText(toolTipKey), mouseX, mouseY)
+                    screen?.renderTooltip(matrices, Text.translatable(toolTipKey), mouseX, mouseY)
                 }
             }
         }

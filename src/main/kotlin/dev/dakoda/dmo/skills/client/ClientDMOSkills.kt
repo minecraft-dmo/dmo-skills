@@ -6,6 +6,7 @@ import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget
 import dev.dakoda.dmo.skills.gui.SkillsScreen
+import dev.dakoda.dmo.skills.gui.toast.DiscoveryToast
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
@@ -14,7 +15,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.util.InputUtil
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResult.PASS
 import net.minecraft.util.ActionResult.SUCCESS
@@ -38,10 +39,10 @@ class ClientDMOSkills : ClientModInitializer {
         addSkillsButtonToInventory()
         HudRenderCallback.EVENT.register(ClientTrackedSkillHUD.LISTENER)
         PlayerGainEXPCallback.EVENT.register(object : PlayerGainEXPCallback {
-            override fun handle(playerEntity: ServerPlayerEntity, increase: Pair<Int, SubSkill>): ActionResult {
-                if (playerEntity.uuid == game.player?.uuid) {
-                    return SUCCESS
-                }
+            override fun handle(playerEntity: PlayerEntity, gain: Pair<Int, SubSkill>, discovered: Boolean): ActionResult {
+//                if (discovered) {
+//                    game.toastManager.add(DiscoveryToast(gain.second))
+//                }
                 return PASS
             }
         })

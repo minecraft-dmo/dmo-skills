@@ -10,7 +10,7 @@ import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_TRACKED
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.gui.DrawableHelper
-import net.minecraft.text.LiteralText
+import net.minecraft.text.Text
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
@@ -60,7 +60,7 @@ object ClientTrackedSkillHUD : DrawableHelper() {
                             old += tickDelta.roundToLong()
                         }
 
-                        println(old)
+//                        println(old)
 
                         val oldExpWidth =
                             ((old.toDouble() / perLevel) * barWidth.toDouble()).roundToInt()
@@ -75,7 +75,7 @@ object ClientTrackedSkillHUD : DrawableHelper() {
                 }
 
                 if (exp.level > 1) {
-                    val text = LiteralText(exp.level.toString())
+                    val text = Text.literal(exp.level.toString())
                     val textWidth = game.textRenderer.getWidth(text)
                     val levelTextX = xx.toFloat() + (barWidth / 2) - (textWidth / 2)
                     val levelTextY = yy.toFloat() - 4f

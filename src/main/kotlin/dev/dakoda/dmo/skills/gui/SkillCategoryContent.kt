@@ -2,21 +2,22 @@ package dev.dakoda.dmo.skills.gui
 
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.dakoda.dmo.skills.DMOIdentifiers.ICONS_TEXTURE
+import dev.dakoda.dmo.skills.ModHelper
 import dev.dakoda.dmo.skills.ModHelper.game
 import dev.dakoda.dmo.skills.ModHelper.leftOfInventory
 import dev.dakoda.dmo.skills.ModHelper.topOfInventory
+import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.SkillCategory
 import dev.dakoda.dmo.skills.Skills
 import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_TRACKED
 import dev.dakoda.dmo.skills.component.SkillsTrackedComponent
+import dev.dakoda.dmo.skills.gui.SkillsScreen.Companion.windowDecor
 import net.minecraft.client.gui.Drawable
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.gui.widget.ButtonWidget
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import kotlin.math.roundToInt
 
 private const val BAR_WIDTH = 144
@@ -28,31 +29,32 @@ class SkillCategoryContent(
 
     private val window get() = game.window
 
+    private fun shouldShow(skill: Skill, discoveries: Map<Skill, Boolean>): Boolean {
+        return discoveries[skill] ?: ModHelper.CONFIG.isDiscoveredByDefault(skill)
+    }
+
     fun titleX() = window.leftOfInventory.toFloat() + 48f
     fun titleY(index: Int) = window.topOfInventory.toFloat() + 40f + (index * 18f)
 
-    fun getDrawables(skills: Skills) = getSubSkillTexts(skills.subSkills(category)) + getHeader()
+    fun getDrawables(skills: Skills, discoveries: Map<Skill, Boolean>) = getSubSkillTexts(skills.subSkills(category).filter {
+        shouldShow(it.skill, discoveries)
+    }) + getHeader()
 
-    fun getDrawableChildren(skills: Skills): List<ButtonWidget> {
-        with(skills.subSkills(category)) {
+    fun getDrawableChildren(skills: Skills, discoveries: Map<Skill, Boolean>): List<ButtonWidget> {
+        with(skills.subSkills(category).filter { shouldShow(it.skill, discoveries )}) {
             return getSubSkillPinToggle(this) + getSubSkillProgressBar(this)
         }
     }
 
     private fun getHeader(): Drawable {
         return Drawable { matrices, _, _, _ ->
-            val headerText = LiteralText("§7--- ").append(TranslatableText("dmo.skills.${category.name.lowercase()}"))
+            val headerText = Text.literal("§7--- ")
+                .append(Text.translatable("dmo.skills.${category.name.lowercase()}"))
                 .append("§7 ---")
             val headerWidth = game.textRenderer.getWidth(headerText)
             val headerX: Float = (window.scaledWidth / 2).toFloat() - (headerWidth / 2)
             val headerY: Float = window.topOfInventory.toFloat() + 20f
-            val decorX: Int = (window.scaledWidth / 2) - 73
-            val decorY: Int = window.topOfInventory + 4
-            RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1f)
-            RenderSystem.setShaderTexture(0, ICONS_TEXTURE)
-            drawTexture(matrices, decorX, decorY, 0f, 69f, 146, 8, 200, 200)
-            drawTexture(matrices, decorX, decorY + 144, 0f, 69f, 146, 8, 200, 200)
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
+            windowDecor(matrices)
             game.textRenderer.draw(
                 matrices,
                 headerText,
@@ -74,7 +76,7 @@ class SkillCategoryContent(
                 Drawable { matrices, _, _, _ ->
                     game.textRenderer.draw(
                         matrices,
-                        TranslatableText("$translationPrefix.${exp.skill.name.lowercase()}"),
+                        Text.translatable("$translationPrefix.${exp.skill.name.lowercase()}"),
                         titleX(), titleY(index),
                         0x000000
                     )
@@ -86,17 +88,17 @@ class SkillCategoryContent(
     private fun getSubSkillPinToggle(subSkills: List<Skills.EXP>): List<ButtonWidget> {
         return subSkills.mapIndexed { index, exp ->
             object : ButtonWidget(
-                titleX().toInt() + BAR_WIDTH - 16, titleY(index).toInt() - 2, 12, 12, Text.of(""), {
-                    println("Toggling pin for ${exp.skill.name}")
-                    (COMP_SKILLS_TRACKED.get(game.player) as SkillsTrackedComponent).toggle(exp.skill as SubSkill)
-                    COMP_SKILLS_TRACKED.sync(game.player)
-                }
+                titleX().toInt() + BAR_WIDTH - 16, titleY(index).toInt() - 2, 12, 12, Text.empty(), {
+//                    println("Toggling pin for ${exp.skill.name}")
+                    (COMP_SKILLS_TRACKED.get(game.player!!) as SkillsTrackedComponent).toggle(exp.skill as SubSkill)
+                    COMP_SKILLS_TRACKED.sync(game.player!!)
+                }, NarrationSupplier { Text.empty() }
             ) {
                 override fun render(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
-                    val isTracked = COMP_SKILLS_TRACKED.get(game.player).trackedSkills[exp.skill] == 1
+                    val isTracked = COMP_SKILLS_TRACKED.get(game.player!!).trackedSkills[exp.skill] == 1
                     RenderSystem.setShaderTexture(0, ICONS_TEXTURE)
                     val texVModified = if (isTracked) 12f else 0f
-                    DrawableHelper.drawTexture(matrices, x, y, 0f, texVModified + 44f, 12, 12, 200, 200)
+                    drawTexture(matrices, x, y, 0f, texVModified + 44f, 12, 12, 200, 200)
                     super.render(matrices, mouseX, mouseY, delta)
                 }
 
@@ -112,7 +114,7 @@ class SkillCategoryContent(
             val xx = titleX().toInt() - 1
             val yy = titleY(index).toInt() + 9
             object : ButtonWidget(
-                xx, yy, BAR_WIDTH, 7, Text.of(""), { }
+                xx, yy, BAR_WIDTH, 7, Text.empty(), { }, NarrationSupplier { Text.empty() }
             ) {
 
                 override fun render(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
@@ -121,11 +123,11 @@ class SkillCategoryContent(
                     val expWidth = ((exp.raw.toFloat() / Skills.EXP.perLevel) * BAR_WIDTH.toFloat()).roundToInt()
 
                     RenderSystem.setShaderTexture(0, ICONS_TEXTURE)
-                    DrawableHelper.drawTexture(matrices, xx, yy, 0f, texVModified + 0f, BAR_WIDTH, height, 200, 200)
-                    DrawableHelper.drawTexture(matrices, xx, yy, 0f, texVModified + 7f, expWidth, height, 200, 200)
+                    drawTexture(matrices, xx, yy, 0f, texVModified + 0f, BAR_WIDTH, height, 200, 200)
+                    drawTexture(matrices, xx, yy, 0f, texVModified + 7f, expWidth, height, 200, 200)
 
                     if (exp.level > 1) {
-                        val text = LiteralText(exp.level.toString())
+                        val text = Text.literal(exp.level.toString())
                         val levelTextX = xx.toFloat() + (BAR_WIDTH / 2) - 2f
                         val levelTextY = yy.toFloat() - 4f
                         game.textRenderer.draw(matrices, text, levelTextX - 1f, levelTextY + 0f, 0x000000)
@@ -137,7 +139,7 @@ class SkillCategoryContent(
                     if (isHovered) {
                         game.currentScreen?.renderTooltip(
                             matrices,
-                            TranslatableText("dmo.skills.progress", exp.raw, Skills.EXP.perLevel),
+                            Text.translatable("dmo.skills.progress", exp.raw, Skills.EXP.perLevel),
                             mouseX, mouseY
                         )
                     }

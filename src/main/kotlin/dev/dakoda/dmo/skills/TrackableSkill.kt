@@ -1,11 +1,11 @@
 package dev.dakoda.dmo.skills
 
 import net.minecraft.item.ItemStack
-import net.minecraft.text.TranslatableText
+import net.minecraft.text.Text
 
 sealed interface TrackableSkill {
 
-    val translatableText: TranslatableText
+    val translatableText: Text
 
     val name: String
 

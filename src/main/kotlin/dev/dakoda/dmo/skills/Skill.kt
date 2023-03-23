@@ -20,7 +20,7 @@ import net.minecraft.item.Items.STONE
 import net.minecraft.item.Items.SWEET_BERRIES
 import net.minecraft.item.Items.TROPICAL_FISH
 import net.minecraft.item.Items.WHEAT
-import net.minecraft.text.TranslatableText
+import net.minecraft.text.Text
 
 object SkillRegistry {
 
@@ -44,7 +44,7 @@ sealed class Skill(
     val name: String,
     val icon: Item,
 ) {
-    val translatableText get() = TranslatableText("dmo.skills.${name.lowercase()}")
+    val translatableText get() = Text.translatable("dmo.skills.${name.lowercase()}")
 
     fun stack(): ItemStack = icon.defaultStack
 

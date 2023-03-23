@@ -16,10 +16,14 @@ class DMOSkillsComponents : EntityComponentInitializer {
         val COMP_SKILLS_TRACKED: ComponentKey<ISkillsTrackedComponent> = ComponentRegistry.getOrCreate(
             Identifier("dmo", "skills_track"), ISkillsTrackedComponent::class.java
         )
+        val COMP_SKILLS_DISCOVERED: ComponentKey<ISkillsDiscoveredComponent> = ComponentRegistry.getOrCreate(
+            Identifier("dmo", "skills_discovered"), ISkillsDiscoveredComponent::class.java
+        )
     }
 
     override fun registerEntityComponentFactories(registry: EntityComponentFactoryRegistry) {
         registry.registerForPlayers(COMP_SKILLS_EXP, { SkillsEXPComponent() }, ALWAYS_COPY)
         registry.registerForPlayers(COMP_SKILLS_TRACKED, { SkillsTrackedComponent() }, ALWAYS_COPY)
+        registry.registerForPlayers(COMP_SKILLS_DISCOVERED, { SkillsDiscoveredComponent() }, ALWAYS_COPY)
     }
 }

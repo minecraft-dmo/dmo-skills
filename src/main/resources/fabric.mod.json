@@ -4,7 +4,9 @@
   "version": "${version}",
   "name": "DMO: Skills",
   "description": "",
-  "authors": [],
+  "authors": [
+    "dakoda_"
+  ],
   "contact": {},
   "license": "MIT",
   "environment": "*",
@@ -29,14 +31,17 @@
     "dmo-skills.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.13.3",
-    "fabric": "*",
-    "minecraft": "1.18.1"
+    "fabricloader": "0.14.17",
+    "fabric-api": "0.76.0+1.19.3",
+    "fabric-language-kotlin": "1.9.2+kotlin.1.8.10",
+    "minecraft": "1.19.3",
+    "java": "17"
   },
   "custom": {
     "cardinal-components": [
       "dmo:skills_exp",
-      "dmo:skills_track"
+      "dmo:skills_track",
+      "dmo:skills_discovered"
     ]
   }
 }

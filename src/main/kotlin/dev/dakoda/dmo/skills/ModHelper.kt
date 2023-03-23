@@ -4,6 +4,11 @@ package dev.dakoda.dmo.skills
 
 import dev.dakoda.dmo.skills.Skills.EXP
 import dev.dakoda.dmo.skills.Skills.EXP.Companion.NULL
+import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_DISCOVERED
+import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
+import dev.dakoda.dmo.skills.config.DMOSkillsConfig
+import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
+import dev.dakoda.dmo.skills.gui.toast.DiscoveryToast
 import net.fabricmc.fabric.api.client.screen.v1.Screens
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
@@ -12,15 +17,20 @@ import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.client.util.Window
 import net.minecraft.enchantment.EnchantmentHelper
 import net.minecraft.enchantment.Enchantments.SILK_TOUCH
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
+import net.minecraft.util.ActionResult
 import net.minecraft.util.Identifier
-import net.minecraft.util.Util.NIL_UUID
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import org.apache.logging.log4j.Logger
 
 object ModHelper {
     const val modID = "dmo-skills"
+
+    lateinit var CONFIG: DMOSkillsConfig
+    lateinit var LOGGER: Logger
 
     fun resource(location: String) = Identifier(modID, location)
 
@@ -29,7 +39,7 @@ object ModHelper {
     val Screen.buttons: MutableList<ClickableWidget>
         get() = Screens.getButtons(this)
 
-    fun ClientPlayerEntity?.debugMessage(text: String) = this?.sendSystemMessage(Text.of(text), NIL_UUID)
+    fun ClientPlayerEntity?.debugMessage(text: String) = this?.sendMessage(Text.of(text))
 
     fun List<EXP>.find(trackableSkill: TrackableSkill) = this.find { it.skill == trackableSkill } ?: NULL
 
@@ -42,5 +52,22 @@ object ModHelper {
 
     fun BlockPos.horizontals(world: World) = listOf(north(), east(), south(), west()).map {
         world.getBlockState(it)
+    }
+
+    fun gainEXP(player: PlayerEntity, gainAmount: Int, gainSkill: SubSkill) = gainEXP(player, gainAmount to gainSkill)
+
+    fun gainEXP(player: PlayerEntity, gain: Pair<Int, SubSkill>) {
+        val discoveredSkills = COMP_SKILLS_DISCOVERED[player].skillsDiscovered
+        var discoveredNewSkill = false
+        if (discoveredSkills[gain.second] != true) {
+            discoveredSkills[gain.second] = true
+            discoveredNewSkill = true
+        }
+
+        val playerSkills = COMP_SKILLS_EXP[player].skills
+        playerSkills.increase(gain)
+        PlayerGainEXPCallback.EVENT.invoker().handle(player, gain, discoveredNewSkill)
+        COMP_SKILLS_EXP.sync(player)
+        COMP_SKILLS_DISCOVERED.sync(player)
     }
 }

@@ -3,13 +3,13 @@
   "dmo.skills.progress": "%d / %d EXP",
   "dmo.skills.inventory.back": "Inventory",
 
-  "dmo.skills.gathering": "Gathering",
+  "dmo.skills.gathering": "Gatherer",
   "dmo.skills.gathering.lumbering": "Lumbering",
   "dmo.skills.gathering.mining": "Mining",
   "dmo.skills.gathering.foraging": "Foraging",
   "dmo.skills.gathering.fishing": "Fishing",
 
-  "dmo.skills.farming": "Farming",
+  "dmo.skills.farming": "Farmer",
   "dmo.skills.farming.cultivation": "Cultivation",
   "dmo.skills.farming.animal_care": "Animal Husbandry",
 
@@ -20,12 +20,12 @@
   "dmo.skills.explorer.cartography": "Cartography",
   "dmo.skills.explorer.dungeoneer": "Dungeoneer",
 
-  "dmo.skills.combat": "Combat",
+  "dmo.skills.combat": "Combatant",
   "dmo.skills.combat.melee": "Melee",
   "dmo.skills.combat.archery": "Archery",
   "dmo.skills.combat.hunter": "Hunter",
 
-  "dmo.skills.crafting": "Crafting",
+  "dmo.skills.crafting": "Crafter",
   "dmo.skills.crafting.alchemy": "Alchemy",
   "dmo.skills.crafting.enchanting": "Enchanting",
   "dmo.skills.crafting.metalwork": "Metalwork",

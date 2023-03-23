@@ -1,0 +1,33 @@
+{
+  "dmo.skills": "Jobb",
+  "dmo.skills.progress": "%d / %d EXP",
+  "dmo.skills.inventory.back": "Förråd",
+
+  "dmo.skills.gathering": "Arbetare",
+  "dmo.skills.gathering.lumbering": "Skogsavverkning",
+  "dmo.skills.gathering.mining": "Brytning",
+  "dmo.skills.gathering.foraging": "Fodersökning",
+  "dmo.skills.gathering.fishing": "Fiske",
+
+  "dmo.skills.farming": "Bonde",
+  "dmo.skills.farming.cultivation": "Odling",
+  "dmo.skills.farming.animal_care": "Djurhållning",
+
+  "dmo.skills.merchant": "Handlare",
+  "dmo.skills.merchant.trading": "Handel",
+
+  "dmo.skills.explorer": "Utforskare",
+  "dmo.skills.explorer.cartography": "Kartografi",
+  "dmo.skills.explorer.dungeoneer": "Kryptanfallare",
+
+  "dmo.skills.combat": "Stridande",
+  "dmo.skills.combat.melee": "Närstrid",
+  "dmo.skills.combat.archery": "Bågskytte",
+  "dmo.skills.combat.hunter": "Jägare",
+
+  "dmo.skills.crafting": "Hantverkare",
+  "dmo.skills.crafting.alchemy": "Alkemi",
+  "dmo.skills.crafting.enchanting": "Förtrollning",
+  "dmo.skills.crafting.metalwork": "Metallarbete",
+  "dmo.skills.crafting.cooking": "Matlagning"
+}

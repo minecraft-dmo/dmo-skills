@@ -11,12 +11,11 @@ class Skills(
      */
     fun increase(inc: Int, subSkill: SubSkill) = increase(inc, subSkill as Skill)
 
+    fun increase(gain: Pair<Int, SubSkill>) = increase(gain.first, gain.second as Skill)
+
     private fun increase(inc: Int, skill: Skill) {
         if (skill is SkillCategory) return
         if (skill in values.keys) {
-            val beforeLevel = values[skill]?.level
-            val beforeEXP = values[skill]?.raw
-
             val exp = values[skill] ?: return
             with(exp) {
                 val i = (raw + inc)
@@ -30,7 +29,7 @@ class Skills(
                             level = l + levels
                         } ?: return
                         )
-                    println("${skill.name} level was $beforeLevel, increased to ${values[skill]?.level} ")
+//                    println("${skill.name} level was $beforeLevel, increased to ${values[skill]?.level} ")
                 } else {
                     values[skill] = (
                         values[skill]?.apply {
@@ -39,7 +38,7 @@ class Skills(
                         )
                 }
             }
-            println("${skill.name} EXP was $beforeEXP, increased to ${values[skill]?.raw}")
+//            println("${skill.name} EXP was $beforeEXP, increased to ${values[skill]?.raw}")
         }
     }
 
