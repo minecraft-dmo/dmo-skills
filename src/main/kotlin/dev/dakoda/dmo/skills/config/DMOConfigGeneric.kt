@@ -1,4 +1,4 @@
-package dev.dakoda.dmo.skills.config.dungeoneer
+package dev.dakoda.dmo.skills.config
 
 import com.google.gson.annotations.SerializedName
 

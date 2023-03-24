@@ -1,8 +1,8 @@
 package dev.dakoda.dmo.skills.gui.toast
 
 import com.mojang.blaze3d.systems.RenderSystem
-import dev.dakoda.dmo.skills.ModHelper.CONFIG
-import dev.dakoda.dmo.skills.ModHelper.game
+import dev.dakoda.dmo.skills.DMOSkills.CONFIG
+import dev.dakoda.dmo.skills.DMOSkills.game
 import dev.dakoda.dmo.skills.Skill
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment

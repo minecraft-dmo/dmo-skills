@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills.exp
 
-import dev.dakoda.dmo.skills.SubSkill
+import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.exp.data.EXPGain
 import dev.dakoda.dmo.skills.exp.map.EXPMap
 import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order
@@ -34,5 +34,5 @@ abstract class AbstractChecker<Key, Params : EXPGain.Provider.Params, R : EXPGai
         protected operator fun <R : EXPGain.Rules> EXPMap<EntityType<*>, R>.set(tag: TagKey<EntityType<*>>, entry: EXPMap.Entry<R>) = put(KeyMatcher.Entities.Tag(tag), entry)
     }
 
-    val Pair<Int, SubSkill>.expGain get() = EXPGain(this)
+    val Pair<Int, Skill.Sub>.expGain get() = EXPGain(this)
 }

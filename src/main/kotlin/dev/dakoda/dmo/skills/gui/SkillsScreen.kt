@@ -2,13 +2,11 @@ package dev.dakoda.dmo.skills.gui
 
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.dakoda.dmo.skills.DMOIdentifiers
-import dev.dakoda.dmo.skills.ModHelper
-import dev.dakoda.dmo.skills.ModHelper.game
-import dev.dakoda.dmo.skills.ModHelper.topOfInventory
+import dev.dakoda.dmo.skills.DMOSkills
+import dev.dakoda.dmo.skills.DMOSkills.game
 import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.Skill.Companion.NULL_CAT
-import dev.dakoda.dmo.skills.SkillCategory
-import dev.dakoda.dmo.skills.client.ClientDMOSkills.Companion.KEYBINDING_SKILLS_MENU
+import dev.dakoda.dmo.skills.client.ClientModInitialiser.Companion.KEYBINDING_SKILLS_MENU
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_DISCOVERED
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget.Companion.BUTTON_SEPARATE
@@ -42,7 +40,7 @@ class SkillsScreen : CottonClientScreen(object : LightweightGuiDescription() {
 
     private val categories = Skill.allCategories.filter { it != NULL_CAT }
 
-    private val activeCategory: SkillCategory
+    private val activeCategory: Skill.Category
         get() = TrackLastCategory.last
 
     private val activeCategoryContent: SkillCategoryContent
@@ -50,10 +48,10 @@ class SkillsScreen : CottonClientScreen(object : LightweightGuiDescription() {
 
     object TrackLastCategory {
         var set: Boolean = false
-        lateinit var last: SkillCategory
+        lateinit var last: Skill.Category
     }
 
-    private fun swapCategory(skill: SkillCategory) {
+    private fun swapCategory(skill: Skill.Category) {
         if (skill in categories) TrackLastCategory.last = skill
         init()
     }
@@ -62,7 +60,7 @@ class SkillsScreen : CottonClientScreen(object : LightweightGuiDescription() {
         clearChildren()
         super.init()
 
-        categories.filter { it.subSkills.any { discoveries[it] ?: ModHelper.CONFIG.isDiscoveredByDefault(it) } }.forEachIndexed { index, skillCategory ->
+        categories.filter { it.subSkills.any { discoveries[it] ?: DMOSkills.CONFIG.isDiscoveredByDefault(it) } }.forEachIndexed { index, skillCategory ->
             if (!TrackLastCategory.set) {
                 TrackLastCategory.set = true
                 TrackLastCategory.last = skillCategory

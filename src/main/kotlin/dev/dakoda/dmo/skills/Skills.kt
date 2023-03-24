@@ -7,17 +7,12 @@ class Skills(
     val values: MutableMap<Skill, EXP> = mutableMapOf()
 ) {
 
-    /**
-     * These methods exist for auto-completion, because IntelliJ
-     * can't suggest [TrackableSkill] enums.
-     */
-    fun increase(inc: Int, subSkill: SubSkill) = increase(inc, subSkill as Skill)
-
+    fun increase(inc: Int, subSkill: Skill.Sub) = increase(inc, subSkill as Skill)
     fun increase(gain: EXPGain) = increase(gain.amount, gain.skill)
-    fun increase(gain: Pair<Int, SubSkill>) = increase(gain.first, gain.second as Skill)
+    fun increase(gain: Pair<Int, Skill.Sub>) = increase(gain.first, gain.second as Skill)
 
     private fun increase(inc: Int, skill: Skill) {
-        if (skill is SkillCategory) return
+        if (skill is Skill.Category) return
         if (skill in values.keys) {
             val exp = values[skill] ?: return
             with(exp) {
@@ -46,11 +41,11 @@ class Skills(
     }
 
     fun levelOf(skill: Skill): Long {
-        if (skill is SkillCategory) skill.updateRaw()
+        if (skill is Skill.Category) skill.updateRaw()
         return values[skill]?.level ?: 0L
     }
 
-    private fun SkillCategory.updateRaw() {
+    private fun Skill.Category.updateRaw() {
         values[this]?.raw = this.subSkills.sumOf {
             values[it]?.raw ?: 0
         }
@@ -59,7 +54,7 @@ class Skills(
     operator fun get(skill: Skill) = progressOf(skill)
 
     fun progressOf(skill: Skill): EXP {
-        if (skill is SkillCategory) skill.updateRaw()
+        if (skill is Skill.Category) skill.updateRaw()
         return values[skill] ?: EXP.NULL
     }
 
@@ -72,7 +67,7 @@ class Skills(
         values[it]
     }
 
-    fun subSkills(category: SkillCategory): List<EXP> = category.subSkills.mapNotNull {
+    fun subSkills(category: Skill.Category): List<EXP> = category.subSkills.mapNotNull {
         values[it]
     }
 

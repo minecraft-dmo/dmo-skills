@@ -1,7 +1,6 @@
 package dev.dakoda.dmo.skills.component
 
 import dev.dakoda.dmo.skills.Skill
-import dev.dakoda.dmo.skills.SubSkill
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent
 import net.minecraft.nbt.NbtCompound
 
@@ -9,7 +8,7 @@ class SkillsTrackedComponent : ISkillsTrackedComponent, AutoSyncedComponent {
 
     override var trackedSkills: MutableMap<Skill, Int> = Skill.allSubSkills.associateWith { 0 }.toMutableMap()
 
-    fun toggle(subSkill: SubSkill) {
+    fun toggle(subSkill: Skill.Sub) {
         trackedSkills[subSkill] = if (trackedSkills[subSkill] == 1) 0 else 1
     }
 

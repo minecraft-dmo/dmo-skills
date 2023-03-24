@@ -2,10 +2,9 @@ package dev.dakoda.dmo.skills.client
 
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.dakoda.dmo.skills.DMOIdentifiers.ICONS_TEXTURE
-import dev.dakoda.dmo.skills.ModHelper.game
+import dev.dakoda.dmo.skills.DMOSkills.game
 import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.Skills.EXP.Companion.perLevel
-import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_TRACKED
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
@@ -16,9 +15,9 @@ import kotlin.math.roundToLong
 
 object ClientTrackedSkillHUD : DrawableHelper() {
 
-    private var olds: MutableMap<SubSkill, Long>? = null
+    private var olds: MutableMap<Skill.Sub, Long>? = null
 
-    private fun SubSkill.old() = olds!![this]
+    private fun Skill.Sub.old() = olds!![this]
 
     val LISTENER: HudRenderCallback = HudRenderCallback { matrices, tickDelta ->
         if (olds == null) {
@@ -36,7 +35,7 @@ object ClientTrackedSkillHUD : DrawableHelper() {
         val trackerStartY = 12
         val trackerDivider = 16
         toTrack.forEachIndexed { index, exp ->
-            if (exp.skill is SubSkill) {
+            if (exp.skill is Skill.Sub) {
                 val y = trackerStartY + (index * trackerDivider)
                 val barWidth = 62
                 val expWidth = ((exp.raw.toFloat() / perLevel) * barWidth.toFloat()).roundToInt()

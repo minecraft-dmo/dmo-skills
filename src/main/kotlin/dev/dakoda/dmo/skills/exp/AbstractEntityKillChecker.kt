@@ -1,8 +1,8 @@
 package dev.dakoda.dmo.skills.exp
 
+import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.Skill.Companion.MELEE
 import dev.dakoda.dmo.skills.Skill.Companion.RANGER
-import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.exp.AbstractChecker.ChecksEntities
 import dev.dakoda.dmo.skills.exp.AbstractEntityKillChecker.EntityKillParams
 import dev.dakoda.dmo.skills.exp.AbstractEntityKillChecker.EntityKillRules
@@ -27,7 +27,8 @@ import net.minecraft.registry.tag.TagKey
 import net.minecraft.server.world.ServerWorld
 
 abstract class AbstractEntityKillChecker(
-    private val checkerSkill: SubSkill
+    private val checkerSkill: Skill.Sub,
+    private val useBackupEXP: Boolean = false
 ) : ChecksEntities<EntityKillParams, EntityKillRules>() {
 
     class EntityKillParams(
@@ -49,7 +50,7 @@ abstract class AbstractEntityKillChecker(
     override fun resolve(params: EntityKillParams, order: Order): EXPGain? {
         if (!haveEntryFor(params.killedEntity.type, order)) {
             return run {
-                if (params.killedEntity is Monster) EXPGain(5, checkerSkill) else null
+                if (useBackupEXP && params.killedEntity is Monster) EXPGain(5, checkerSkill) else null
             }
         }
 

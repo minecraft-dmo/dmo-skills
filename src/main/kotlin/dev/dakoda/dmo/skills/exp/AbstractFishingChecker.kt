@@ -1,7 +1,7 @@
 package dev.dakoda.dmo.skills.exp
 
+import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.Skill.Companion.FISHING
-import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.exp.AbstractChecker.ChecksItems
 import dev.dakoda.dmo.skills.exp.AbstractFishingChecker.FishingParams
 import dev.dakoda.dmo.skills.exp.data.EXPGain
@@ -56,7 +56,7 @@ abstract class AbstractFishingChecker : ChecksItems<FishingParams, Rules>() {
     }
 
     protected fun flat(
-        gain: Pair<Int, SubSkill>,
+        gain: Pair<Int, Skill.Sub>,
         rules: Rules = Rules(),
         settings: Settings = Settings(DONT_CARE)
     ) = EXPMap.Entry(Provider.Default(EXPGain(gain)), rules, settings)
@@ -64,7 +64,7 @@ abstract class AbstractFishingChecker : ChecksItems<FishingParams, Rules>() {
     protected fun callback(
         rules: Rules = Rules(),
         settings: Settings = Settings(DONT_CARE),
-        callback: (ItemStack) -> Pair<Int, SubSkill>?
+        callback: (ItemStack) -> Pair<Int, Skill.Sub>?
     ) = EXPMap.Entry(FishingProvider { i -> callback(i)?.expGain }, rules, settings)
 
     protected fun settings() = Settings(DONT_CARE)

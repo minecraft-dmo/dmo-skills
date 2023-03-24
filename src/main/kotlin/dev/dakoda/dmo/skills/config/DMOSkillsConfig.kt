@@ -18,8 +18,6 @@ import dev.dakoda.dmo.skills.Skill.Companion.METALWORK
 import dev.dakoda.dmo.skills.Skill.Companion.MINING
 import dev.dakoda.dmo.skills.Skill.Companion.RANGER
 import dev.dakoda.dmo.skills.Skill.Companion.TRADING
-import dev.dakoda.dmo.skills.config.dungeoneer.DMOConfigDungeoneer
-import dev.dakoda.dmo.skills.config.dungeoneer.DMOConfigGeneric
 
 class DMOSkillsConfig {
 
@@ -33,21 +31,30 @@ class DMOSkillsConfig {
     @SerializedName("experience")
     var exp = Experience()
 
+    class Discovery {
+        @SerializedName("toasts_enabled")
+        var toastsEnabled: Boolean = false
+
+        @SerializedName("toast_duration_seconds")
+        var toastDurationSeconds: Int = 5
+            get() = if (field <= 0) 5 else field
+    }
+
     class Experience {
         @SerializedName("lumbering")
-        var lumbering = DMOConfigGeneric()
+        var lumbering = DMOConfigLumbering()
 
         @SerializedName("mining")
-        var mining = DMOConfigGeneric()
+        var mining = DMOConfigMining()
 
         @SerializedName("foraging")
-        var foraging = DMOConfigGeneric()
+        var foraging = DMOConfigForaging()
 
         @SerializedName("fishing")
-        var fishing = DMOConfigGeneric()
+        var fishing = DMOConfigFishing()
 
         @SerializedName("cultivation")
-        var cultivation = DMOConfigGeneric()
+        var cultivation = DMOConfigCultivation()
 
         @SerializedName("animal_care")
         var animalCare = DMOConfigGeneric()
@@ -61,14 +68,11 @@ class DMOSkillsConfig {
         @SerializedName("dungeoneer")
         var dungeoneer = DMOConfigDungeoneer()
 
-        @SerializedName("melee")
-        var melee = DMOConfigGeneric()
-
-        @SerializedName("archery")
-        var archery = DMOConfigGeneric()
+        @SerializedName("combat")
+        var combat = DMOConfigCombat()
 
         @SerializedName("hunter")
-        var hunter = DMOConfigGeneric()
+        var hunter = DMOConfigHunter()
 
         @SerializedName("alchemy")
         var alchemy = DMOConfigGeneric()
@@ -80,16 +84,7 @@ class DMOSkillsConfig {
         var metalwork = DMOConfigGeneric()
 
         @SerializedName("cooking")
-        var cooking = DMOConfigGeneric()
-    }
-
-    class Discovery {
-        @SerializedName("toasts_enabled")
-        var toastsEnabled: Boolean = false
-
-        @SerializedName("toast_duration_seconds")
-        var toastDurationSeconds: Int = 5
-            get() = if (field <= 0) 5 else field
+        var cooking = DMOConfigCooking()
     }
 
     fun isDiscoveredByDefault(skill: Skill) = !when (skill) {
@@ -102,8 +97,8 @@ class DMOSkillsConfig {
         TRADING -> exp.trading.defaultHidden
         CARTOGRAPHY -> exp.cartography.defaultHidden
         DUNGEONEER -> exp.dungeoneer.defaultHidden
-        MELEE -> exp.melee.defaultHidden
-        RANGER -> exp.archery.defaultHidden
+        MELEE -> exp.combat.defaultHidden
+        RANGER -> exp.combat.defaultHidden
         HUNTER -> exp.hunter.defaultHidden
         ALCHEMY -> exp.alchemy.defaultHidden
         ENCHANTING -> exp.enchanting.defaultHidden

@@ -1,12 +1,12 @@
 package dev.dakoda.dmo.skills.exp.data
 
-import dev.dakoda.dmo.skills.SubSkill
+import dev.dakoda.dmo.skills.Skill
 
 data class EXPGain(
     var amount: Int,
-    var skill: SubSkill
+    var skill: Skill.Sub
 ) {
-    constructor(pair: Pair<Int, SubSkill>) : this(pair.first, pair.second)
+    constructor(pair: Pair<Int, Skill.Sub>) : this(pair.first, pair.second)
 
     abstract class Provider {
         abstract fun resolveEXP(): EXPGain?

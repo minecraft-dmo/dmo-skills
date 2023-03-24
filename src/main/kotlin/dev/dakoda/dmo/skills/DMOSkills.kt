@@ -1,127 +1,49 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package dev.dakoda.dmo.skills
 
-import com.google.gson.GsonBuilder
-import dev.dakoda.dmo.skills.ModHelper.CONFIG
-import dev.dakoda.dmo.skills.ModHelper.LOGGER
+import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_DISCOVERED
+import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.config.DMOSkillsConfig
-import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockParams
-import dev.dakoda.dmo.skills.exp.AbstractEntityKillChecker.EntityKillParams
-import dev.dakoda.dmo.skills.exp.AbstractUseBlockChecker.UseBlockParams
-import dev.dakoda.dmo.skills.exp.BreakBlockChecker
-import dev.dakoda.dmo.skills.exp.CookingChecker
-import dev.dakoda.dmo.skills.exp.EntityHuntChecker
-import dev.dakoda.dmo.skills.exp.EntityKillChecker
-import dev.dakoda.dmo.skills.exp.FishingChecker
-import dev.dakoda.dmo.skills.exp.UseBlockChecker
-import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.AFTER
-import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.BEFORE
-import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.DONT_CARE
-import net.fabricmc.api.ModInitializer
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
-import net.fabricmc.fabric.api.event.player.UseBlockCallback
-import net.fabricmc.loader.api.FabricLoader
+import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
+import dev.dakoda.dmo.skills.exp.data.EXPGain
+import net.minecraft.client.MinecraftClient
+import net.minecraft.enchantment.EnchantmentHelper
+import net.minecraft.enchantment.Enchantments.SILK_TOUCH
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.util.ActionResult.PASS
-import org.apache.logging.log4j.LogManager
-import java.io.File
-import kotlin.io.path.pathString
+import net.minecraft.item.ItemStack
+import net.minecraft.util.Identifier
+import org.apache.logging.log4j.Logger
 
-class DMOSkills : ModInitializer {
+object DMOSkills {
+    const val modID = "dmo-skills"
 
-    override fun onInitialize() {
-        LOGGER = LogManager.getLogger(ModHelper.modID)
+    lateinit var CONFIG: DMOSkillsConfig
+    internal lateinit var LOGGER: Logger
 
-        try {
-            val configPath = FabricLoader.getInstance().configDir.pathString + "/dmo-skills.json"
-            val configFile = File(configPath)
+    internal fun resource(location: String) = Identifier(modID, location)
 
-            val gson = GsonBuilder().setPrettyPrinting().create()
-            if (!configFile.exists()) {
-                val defaultConfig = DMOSkillsConfig.default
-                val asJson = gson.toJson(defaultConfig)
-                configFile.writeText(asJson)
-            }
+    internal val game: MinecraftClient by lazy { MinecraftClient.getInstance() }
 
-            val json = configFile.readText()
-            CONFIG = gson.fromJson(json, DMOSkillsConfig::class.java)
-            // Updates the file with any new config values
-            configFile.writeText(gson.toJson(CONFIG))
-        } catch (e: Exception) {
-            LOGGER.error("Severe failure when reading/writing from mod config file, using default config for now. You should fix that.")
-            LOGGER.error(e)
-            CONFIG = DMOSkillsConfig.default
+    internal val ItemStack.hasSilkTouch get() = SILK_TOUCH in EnchantmentHelper.get(this).keys
+    internal val ItemStack.hasAnyEnchantment get() = EnchantmentHelper.get(this).isNotEmpty()
+
+    fun gainEXP(player: PlayerEntity, gainAmount: Int, gainSkill: Skill.Sub) = gainEXP(player, gainAmount to gainSkill)
+
+    fun gainEXP(player: PlayerEntity, gain: EXPGain) {
+        val discoveredSkills = COMP_SKILLS_DISCOVERED[player].skillsDiscovered
+        var discoveredNewSkill = false
+        if (discoveredSkills[gain.skill] != true) {
+            discoveredSkills[gain.skill] = true
+            discoveredNewSkill = true
         }
 
-        initialiseCheckers()
-
-        PlayerBlockBreakEvents.AFTER.register { world, player, blockPos, blockState, blockEntity ->
-            if (player.isSurvival) {
-                BreakBlockChecker.resolve(
-                    BreakBlockParams(
-                        world,
-                        player.mainHandStack,
-                        blockPos,
-                        blockState,
-                        blockEntity
-                    ),
-                    order = AFTER
-                )?.let {
-                    ModHelper.gainEXP(player, it)
-                }
-            }
-        }
-
-        PlayerBlockBreakEvents.BEFORE.register { world, player, blockPos, blockState, blockEntity ->
-            if (player.isSurvival) {
-                BreakBlockChecker.resolve(
-                    BreakBlockParams(
-                        world,
-                        player.mainHandStack,
-                        blockPos,
-                        blockState,
-                        blockEntity
-                    ),
-                    order = BEFORE
-                )?.let {
-                    ModHelper.gainEXP(player, it)
-                }
-            }
-            true
-        }
-
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register { world, entity, killedEntity ->
-            if (entity is PlayerEntity && entity.isSurvival) {
-                EntityKillChecker.resolve(EntityKillParams(world, entity, killedEntity), order = DONT_CARE)?.let {
-                    ModHelper.gainEXP(entity, it)
-                }
-                EntityHuntChecker.resolve(EntityKillParams(world, entity, killedEntity), order = DONT_CARE)?.let {
-                    ModHelper.gainEXP(entity, it)
-                }
-            }
-        }
-
-        UseBlockCallback.EVENT.register { player, world, _, entityHitResult ->
-            if (player.isSurvival) {
-                UseBlockChecker.resolve(
-                    UseBlockParams(
-                        player.mainHandStack,
-                        world,
-                        world.getBlockState(entityHitResult.blockPos),
-                        entityHitResult.blockPos
-                    ),
-                    order = DONT_CARE
-                )?.let {
-                    ModHelper.gainEXP(player, it)
-                }
-            }
-            return@register PASS
-        }
+        val playerSkills = COMP_SKILLS_EXP[player].skills
+        playerSkills.increase(gain)
+        PlayerGainEXPCallback.EVENT.invoker().handle(player, gain, discoveredNewSkill)
+        COMP_SKILLS_EXP.sync(player)
+        COMP_SKILLS_DISCOVERED.sync(player)
     }
 
-    private val PlayerEntity.isSurvival get() = !this.isCreative && !this.isSpectator
-
-    private fun initialiseCheckers() {
-        BreakBlockChecker; CookingChecker; EntityHuntChecker; EntityKillChecker; FishingChecker
-    }
+    fun gainEXP(player: PlayerEntity, gain: Pair<Int, Skill.Sub>) = gainEXP(player, EXPGain(gain))
 }

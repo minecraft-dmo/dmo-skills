@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills.component
 
-import dev.dakoda.dmo.skills.ModHelper
+import dev.dakoda.dmo.skills.DMOSkills
 import dev.dakoda.dmo.skills.Skill
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent
 import net.minecraft.nbt.NbtCompound
@@ -25,7 +25,7 @@ class SkillsDiscoveredComponent : ISkillsDiscoveredComponent, AutoSyncedComponen
             tag.put(
                 it.name,
                 NbtCompound().apply {
-                    putBoolean("discovered", skillsDiscovered[it] ?: ModHelper.CONFIG.isDiscoveredByDefault(it))
+                    putBoolean("discovered", skillsDiscovered[it] ?: DMOSkills.CONFIG.isDiscoveredByDefault(it))
                 }
             )
         }

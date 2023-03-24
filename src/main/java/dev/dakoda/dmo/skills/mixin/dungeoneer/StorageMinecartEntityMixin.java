@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills.mixin.dungeoneer;
 
-import dev.dakoda.dmo.skills.ModHelper;
+import dev.dakoda.dmo.skills.DMOSkills;
 import dev.dakoda.dmo.skills.Skill;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -32,9 +32,9 @@ public abstract class StorageMinecartEntityMixin {
     void mixin_dropItems(DamageSource damageSource, CallbackInfo callbackInfo) {
         Entity attacker = damageSource.getAttacker();
         if (attacker instanceof PlayerEntity && getLootTableId() != null) {
-            ModHelper.INSTANCE.gainEXP(
+            DMOSkills.INSTANCE.gainEXP(
                     (PlayerEntity) attacker,
-                    ModHelper.INSTANCE.getCONFIG().getExp().getDungeoneer().getSources().getBreak_().getMinecartChest(),
+                    DMOSkills.INSTANCE.getCONFIG().getExp().getDungeoneer().getSources().getBreak_().getMinecartChest(),
                     Skill.Companion.getDUNGEONEER()
             );
         }
@@ -51,9 +51,9 @@ public abstract class StorageMinecartEntityMixin {
     ))
     void mixin_createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity, CallbackInfoReturnable<ScreenHandler> cir) {
         if (playerEntity != null && getLootTableId() != null) {
-            ModHelper.INSTANCE.gainEXP(
+            DMOSkills.INSTANCE.gainEXP(
                     playerEntity,
-                    ModHelper.CONFIG.getExp().getDungeoneer().getSources().getUse().getMinecartChest(),
+                    DMOSkills.CONFIG.getExp().getDungeoneer().getSources().getUse().getMinecartChest(),
                     Skill.Companion.getDUNGEONEER()
             );
         }

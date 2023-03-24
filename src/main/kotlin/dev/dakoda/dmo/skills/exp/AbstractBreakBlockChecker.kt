@@ -1,7 +1,7 @@
 package dev.dakoda.dmo.skills.exp
 
-import dev.dakoda.dmo.skills.ModHelper.hasSilkTouch
-import dev.dakoda.dmo.skills.SubSkill
+import dev.dakoda.dmo.skills.DMOSkills.hasSilkTouch
+import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockParams
 import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockRules
 import dev.dakoda.dmo.skills.exp.AbstractChecker.ChecksBlocks
@@ -89,7 +89,7 @@ abstract class AbstractBreakBlockChecker : ChecksBlocks<BreakBlockParams, BreakB
     ) = BreakBlockRules(allowSilkTouch, handTags)
 
     protected fun flat(
-        gain: Pair<Int, SubSkill>,
+        gain: Pair<Int, Skill.Sub>,
         rules: BreakBlockRules = BreakBlockRules(),
         settings: Settings = Settings(AFTER)
     ) = EXPMap.Entry(Default(EXPGain(gain)), rules, settings)
@@ -97,7 +97,7 @@ abstract class AbstractBreakBlockChecker : ChecksBlocks<BreakBlockParams, BreakB
     protected fun callback(
         rules: BreakBlockRules = BreakBlockRules(),
         settings: Settings = Settings(AFTER),
-        callback: (World, BlockPos, BlockState, BlockEntity?) -> Pair<Int, SubSkill>?
+        callback: (World, BlockPos, BlockState, BlockEntity?) -> Pair<Int, Skill.Sub>?
     ) = EXPMap.Entry(BreakBlockProvider { w, p, s, e -> callback(w, p, s, e)?.expGain }, rules, settings)
 
     protected fun settings(order: Settings.Order) = Settings(order)

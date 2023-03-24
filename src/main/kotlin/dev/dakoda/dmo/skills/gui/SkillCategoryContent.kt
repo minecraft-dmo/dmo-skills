@@ -2,20 +2,17 @@ package dev.dakoda.dmo.skills.gui
 
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.dakoda.dmo.skills.DMOIdentifiers.ICONS_TEXTURE
-import dev.dakoda.dmo.skills.ModHelper
-import dev.dakoda.dmo.skills.ModHelper.game
-import dev.dakoda.dmo.skills.ModHelper.leftOfInventory
-import dev.dakoda.dmo.skills.ModHelper.topOfInventory
+import dev.dakoda.dmo.skills.DMOSkills
+import dev.dakoda.dmo.skills.DMOSkills.game
 import dev.dakoda.dmo.skills.Skill
-import dev.dakoda.dmo.skills.SkillCategory
 import dev.dakoda.dmo.skills.Skills
-import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_TRACKED
 import dev.dakoda.dmo.skills.component.SkillsTrackedComponent
 import dev.dakoda.dmo.skills.gui.SkillsScreen.Companion.windowDecor
 import net.minecraft.client.gui.Drawable
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.gui.widget.ButtonWidget
+import net.minecraft.client.gui.widget.ButtonWidget.NarrationSupplier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
 import kotlin.math.roundToInt
@@ -23,14 +20,14 @@ import kotlin.math.roundToInt
 private const val BAR_WIDTH = 144
 
 class SkillCategoryContent(
-    private val category: SkillCategory,
+    private val category: Skill.Category,
     private val translationPrefix: String
 ) : DrawableHelper() {
 
     private val window get() = game.window
 
     private fun shouldShow(skill: Skill, discoveries: Map<Skill, Boolean>): Boolean {
-        return discoveries[skill] ?: ModHelper.CONFIG.isDiscoveredByDefault(skill)
+        return discoveries[skill] ?: DMOSkills.CONFIG.isDiscoveredByDefault(skill)
     }
 
     fun titleX() = window.leftOfInventory.toFloat() + 48f
@@ -98,7 +95,7 @@ class SkillCategoryContent(
                 Text.empty(),
                 {
 //                    println("Toggling pin for ${exp.skill.name}")
-                    (COMP_SKILLS_TRACKED.get(game.player!!) as SkillsTrackedComponent).toggle(exp.skill as SubSkill)
+                    (COMP_SKILLS_TRACKED.get(game.player!!) as SkillsTrackedComponent).toggle(exp.skill as Skill.Sub)
                     COMP_SKILLS_TRACKED.sync(game.player!!)
                 },
                 NarrationSupplier { Text.empty() }
@@ -166,6 +163,6 @@ class SkillCategoryContent(
 
     companion object {
 
-        fun of(skill: SkillCategory) = SkillCategoryContent(skill, "dmo.skills.${skill.name.lowercase()}")
+        fun of(skill: Skill.Category) = SkillCategoryContent(skill, "dmo.skills.${skill.name.lowercase()}")
     }
 }

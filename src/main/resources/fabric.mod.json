@@ -17,13 +17,13 @@
     "client": [
       {
         "adapter": "kotlin",
-        "value": "dev.dakoda.dmo.skills.client.ClientDMOSkills"
+        "value": "dev.dakoda.dmo.skills.client.ClientModInitialiser"
       }
     ],
     "main": [
       {
         "adapter": "kotlin",
-        "value": "dev.dakoda.dmo.skills.DMOSkills"
+        "value": "dev.dakoda.dmo.skills.ModInitialiser"
       }
     ]
   },

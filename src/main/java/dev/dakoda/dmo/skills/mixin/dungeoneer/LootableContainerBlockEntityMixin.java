@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills.mixin.dungeoneer;
 
-import dev.dakoda.dmo.skills.ModHelper;
+import dev.dakoda.dmo.skills.DMOSkills;
 import dev.dakoda.dmo.skills.Skill;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,9 +23,9 @@ public class LootableContainerBlockEntityMixin {
     @Inject(method = "checkLootInteraction", at = @At("HEAD"))
     void mixin_checkLootInteraction(PlayerEntity player, CallbackInfo ci) {
         if (lootTableId != null && player != null) {
-            ModHelper.INSTANCE.gainEXP(
+            DMOSkills.INSTANCE.gainEXP(
                     player,
-                    ModHelper.INSTANCE.getCONFIG().getExp().getDungeoneer().getSources().getUse().getChest(),
+                    DMOSkills.INSTANCE.getCONFIG().getExp().getDungeoneer().getSources().getUse().getChest(),
                     Skill.Companion.getDUNGEONEER()
             );
         }

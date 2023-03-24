@@ -2,11 +2,8 @@ package dev.dakoda.dmo.skills.gui
 
 import com.mojang.blaze3d.systems.RenderSystem
 import dev.dakoda.dmo.skills.DMOIdentifiers
-import dev.dakoda.dmo.skills.ModHelper.game
-import dev.dakoda.dmo.skills.ModHelper.leftOfInventory
-import dev.dakoda.dmo.skills.ModHelper.rightOfInventory
-import dev.dakoda.dmo.skills.ModHelper.topOfInventory
-import dev.dakoda.dmo.skills.SkillCategory
+import dev.dakoda.dmo.skills.DMOSkills.game
+import dev.dakoda.dmo.skills.Skill
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.widget.ButtonWidget.PressAction
 import net.minecraft.client.gui.widget.TexturedButtonWidget
@@ -118,7 +115,7 @@ class SkillCategoryWidget(
 
         fun makeCategoryButton(
             screen: Screen?,
-            skill: SkillCategory,
+            skill: Skill.Category,
             xOffset: Int = 0,
             yOffset: Int = 0,
             pressAction: PressAction

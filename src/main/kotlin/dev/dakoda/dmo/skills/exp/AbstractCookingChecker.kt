@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills.exp
 
-import dev.dakoda.dmo.skills.SubSkill
+import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.exp.AbstractChecker.ChecksItems
 import dev.dakoda.dmo.skills.exp.AbstractCookingChecker.CookingParams
 import dev.dakoda.dmo.skills.exp.data.EXPGain
@@ -54,7 +54,7 @@ abstract class AbstractCookingChecker : ChecksItems<CookingParams, EXPGain.Rules
     }
 
     protected fun flat(
-        gain: Pair<Int, SubSkill>,
+        gain: Pair<Int, Skill.Sub>,
         rules: EXPGain.Rules = EXPGain.Rules(),
         settings: Settings = Settings(DONT_CARE)
     ) = EXPMap.Entry(Provider.Default(EXPGain(gain)), rules, settings)
@@ -62,7 +62,7 @@ abstract class AbstractCookingChecker : ChecksItems<CookingParams, EXPGain.Rules
     protected fun callback(
         rules: EXPGain.Rules = EXPGain.Rules(),
         settings: Settings = Settings(DONT_CARE),
-        callback: (ItemStack) -> Pair<Int, SubSkill>?
+        callback: (ItemStack) -> Pair<Int, Skill.Sub>?
     ) = EXPMap.Entry(CookingProvider { i -> callback(i)?.expGain }, rules, settings)
 
     protected fun settings() = Settings(DONT_CARE)

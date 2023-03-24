@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills
 
-import dev.dakoda.dmo.skills.ModHelper.resource
+import dev.dakoda.dmo.skills.DMOSkills.resource
 
 object DMOIdentifiers {
 

@@ -1,5 +1,6 @@
 package dev.dakoda.dmo.skills.exp
 
+import dev.dakoda.dmo.skills.DMOSkills.CONFIG
 import dev.dakoda.dmo.skills.Skill.Companion.FORAGING
 import dev.dakoda.dmo.skills.Skill.Companion.LUMBERING
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags.AXES
@@ -16,15 +17,19 @@ import net.minecraft.state.property.Properties
 
 object UseBlockChecker : AbstractUseBlockChecker() {
     init {
+        // -- Foraging
+        val foraging = CONFIG.exp.foraging.sources.harvest
         registry[Blocks.SWEET_BERRY_BUSH] = callback { _, _, state, _ ->
             when (state.get(Properties.AGE_3)) {
-                2 -> 3 to FORAGING
-                3 -> 5 to FORAGING
+                2 -> foraging.sweetBerriesFew to FORAGING
+                3 -> foraging.sweetBerriesMany to FORAGING
                 else -> null
             }
         }
+        // -- Lumbering --
+        val lumbering = CONFIG.exp.lumbering.sources.use
         registry[BlockTags.LOGS] = callback(rules = rules(handTags = listOf(AXES))) { item, world, state, pos ->
-            if (state.block !in strippedLogs) 5 to LUMBERING else null
+            if (state.block !in strippedLogs) lumbering.stripLogs to LUMBERING else null
         }
     }
 

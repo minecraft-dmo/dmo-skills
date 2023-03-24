@@ -1,6 +1,5 @@
 package dev.dakoda.dmo.skills.client
 
-import dev.dakoda.dmo.skills.ModHelper.buttons
 import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
 import dev.dakoda.dmo.skills.exp.data.EXPGain
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget
@@ -10,7 +9,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
+import net.fabricmc.fabric.api.client.screen.v1.Screens
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
+import net.minecraft.client.gui.widget.ClickableWidget
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.util.InputUtil
 import net.minecraft.entity.player.PlayerEntity
@@ -18,7 +20,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResult.PASS
 import org.lwjgl.glfw.GLFW
 
-class ClientDMOSkills : ClientModInitializer {
+class ClientModInitialiser : ClientModInitializer {
 
     companion object {
         val KEYBINDING_SKILLS_MENU: KeyBinding = KeyBindingHelper.registerKeyBinding(
@@ -64,4 +66,7 @@ class ClientDMOSkills : ClientModInitializer {
             }
         }
     }
+
+    private val Screen.buttons: MutableList<ClickableWidget>
+        get() = Screens.getButtons(this)
 }

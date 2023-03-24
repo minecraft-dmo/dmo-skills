@@ -20,61 +20,40 @@ import net.minecraft.item.Items.STONE
 import net.minecraft.item.Items.SWEET_BERRIES
 import net.minecraft.item.Items.TROPICAL_FISH
 import net.minecraft.item.Items.WHEAT
-import net.minecraft.text.Text
-
-object SkillRegistry {
-
-    val registered: MutableList<Skill> = mutableListOf()
-
-    fun SubSkill.register(): SubSkill {
-        registered.add(this)
-        return this
-    }
-
-    fun SkillCategory.register(): SkillCategory {
-        this.subSkills.forEach {
-            it.parent = this
-        }
-        registered.add(this)
-        return this
-    }
-}
 
 sealed class Skill(
     val name: String,
     val icon: Item
 ) {
-    val translatableText get() = Text.translatable("dmo.skills.${name.lowercase()}")
-
     fun stack(): ItemStack = icon.defaultStack
 
     companion object {
-        val allCategories: List<SkillCategory> get() = SkillRegistry.registered.filterIsInstance<SkillCategory>()
-        val allSubSkills: List<SubSkill> get() = SkillRegistry.registered.filterIsInstance<SubSkill>()
+        val allCategories: List<Category> get() = SkillRegistry.registered.filterIsInstance<Category>()
+        val allSubSkills: List<Sub> get() = SkillRegistry.registered.filterIsInstance<Sub>()
         val all get() = allCategories + allSubSkills
 
-        val LUMBERING = SubSkill(name = "LUMBERING", icon = OAK_SAPLING).register()
-        val MINING = SubSkill(name = "MINING", icon = RAW_COPPER).register()
-        val FORAGING = SubSkill(name = "FORAGING", icon = SWEET_BERRIES).register()
-        val FISHING = SubSkill(name = "FISHING", icon = TROPICAL_FISH).register()
-        val CULTIVATION = SubSkill(name = "CULTIVATION", icon = WHEAT).register()
-        val ANIMAL_CARE = SubSkill(name = "ANIMAL_CARE", icon = MILK_BUCKET).register()
-        val TRADING = SubSkill(name = "TRADING", icon = EMERALD).register()
-        val CARTOGRAPHY = SubSkill(name = "CARTOGRAPHY", icon = COMPASS).register()
-        val DUNGEONEER = SubSkill(name = "DUNGEONEER", icon = CHEST_MINECART).register()
-        val MELEE = SubSkill(name = "MELEE", icon = IRON_SWORD).register()
-        val RANGER = SubSkill(name = "RANGER", icon = BOW).register()
-        val HUNTER = SubSkill(name = "HUNTER", icon = NETHER_STAR).register()
-        val ALCHEMY = SubSkill(name = "ALCHEMY", icon = POTION).register()
-        val ENCHANTING = SubSkill(name = "ENCHANTING", icon = ENCHANTED_BOOK).register()
-        val METALWORK = SubSkill(name = "METALWORK", icon = ANVIL).register()
-        val COOKING = SubSkill(name = "COOKING", icon = CAKE).register()
+        val LUMBERING = Sub(name = "LUMBERING", icon = OAK_SAPLING).register()
+        val MINING = Sub(name = "MINING", icon = RAW_COPPER).register()
+        val FORAGING = Sub(name = "FORAGING", icon = SWEET_BERRIES).register()
+        val FISHING = Sub(name = "FISHING", icon = TROPICAL_FISH).register()
+        val CULTIVATION = Sub(name = "CULTIVATION", icon = WHEAT).register()
+        val ANIMAL_CARE = Sub(name = "ANIMAL_CARE", icon = MILK_BUCKET).register()
+        val TRADING = Sub(name = "TRADING", icon = EMERALD).register()
+        val CARTOGRAPHY = Sub(name = "CARTOGRAPHY", icon = COMPASS).register()
+        val DUNGEONEER = Sub(name = "DUNGEONEER", icon = CHEST_MINECART).register()
+        val MELEE = Sub(name = "MELEE", icon = IRON_SWORD).register()
+        val RANGER = Sub(name = "RANGER", icon = BOW).register()
+        val HUNTER = Sub(name = "HUNTER", icon = NETHER_STAR).register()
+        val ALCHEMY = Sub(name = "ALCHEMY", icon = POTION).register()
+        val ENCHANTING = Sub(name = "ENCHANTING", icon = ENCHANTED_BOOK).register()
+        val METALWORK = Sub(name = "METALWORK", icon = ANVIL).register()
+        val COOKING = Sub(name = "COOKING", icon = CAKE).register()
 
-        val NULL_SKILL = SubSkill(name = "NULL", icon = STONE)
-        val VARIANT = SubSkill(name = "VARIANT", icon = STONE)
-        val NULL_CAT = SkillCategory(name = "NULL", icon = STONE)
+        val NULL_SKILL = Sub(name = "NULL", icon = STONE)
+        val VARIANT = Sub(name = "VARIANT", icon = STONE)
+        val NULL_CAT = Category(name = "NULL", icon = STONE)
 
-        val GATHERING = SkillCategory(
+        val GATHERING = Category(
             name = "GATHERING",
             icon = OAK_SAPLING,
             subSkills = arrayOf(
@@ -84,7 +63,7 @@ sealed class Skill(
                 FISHING
             )
         ).register()
-        val FARMING = SkillCategory(
+        val FARMING = Category(
             name = "FARMING",
             icon = WHEAT,
             subSkills = arrayOf(
@@ -92,14 +71,14 @@ sealed class Skill(
                 ANIMAL_CARE
             )
         ).register()
-        val MERCHANT = SkillCategory(
+        val MERCHANT = Category(
             name = "MERCHANT",
             icon = EMERALD,
             subSkills = arrayOf(
                 TRADING
             )
         ).register()
-        val EXPLORER = SkillCategory(
+        val EXPLORER = Category(
             name = "EXPLORER",
             icon = COMPASS,
             subSkills = arrayOf(
@@ -107,7 +86,7 @@ sealed class Skill(
                 DUNGEONEER
             )
         ).register()
-        val COMBAT = SkillCategory(
+        val COMBAT = Category(
             name = "COMBAT",
             icon = IRON_SWORD,
             subSkills = arrayOf(
@@ -116,7 +95,7 @@ sealed class Skill(
                 HUNTER
             )
         ).register()
-        val CRAFTING = SkillCategory(
+        val CRAFTING = Category(
             name = "CRAFTING",
             icon = POTION,
             subSkills = arrayOf(
@@ -127,11 +106,11 @@ sealed class Skill(
             )
         ).register()
     }
-}
 
-class SkillCategory(name: String, icon: Item, vararg val subSkills: SubSkill) : Skill(name, icon)
+    class Category(name: String, icon: Item, vararg val subSkills: Sub) : Skill(name, icon)
 
-open class SubSkill(name: String, icon: Item) : Skill(name, icon) {
+    open class Sub(name: String, icon: Item) : Skill(name, icon) {
 
-    lateinit var parent: SkillCategory
+        lateinit var parent: Category
+    }
 }

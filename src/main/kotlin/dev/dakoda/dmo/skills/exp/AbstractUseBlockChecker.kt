@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills.exp
 
-import dev.dakoda.dmo.skills.SubSkill
+import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.exp.AbstractChecker.ChecksBlocks
 import dev.dakoda.dmo.skills.exp.AbstractUseBlockChecker.UseBlockParams
 import dev.dakoda.dmo.skills.exp.AbstractUseBlockChecker.UseBlockRules
@@ -83,7 +83,7 @@ abstract class AbstractUseBlockChecker : ChecksBlocks<UseBlockParams, UseBlockRu
     ) = UseBlockRules(handTags)
 
     protected fun flat(
-        gain: Pair<Int, SubSkill>,
+        gain: Pair<Int, Skill.Sub>,
         rules: UseBlockRules = UseBlockRules(),
         settings: Settings = Settings(DONT_CARE)
     ) = EXPMap.Entry(Default(EXPGain(gain)), rules, settings)
@@ -91,7 +91,7 @@ abstract class AbstractUseBlockChecker : ChecksBlocks<UseBlockParams, UseBlockRu
     protected fun callback(
         rules: UseBlockRules = UseBlockRules(),
         settings: Settings = Settings(DONT_CARE),
-        callback: (ItemStack, World, BlockState, BlockPos) -> Pair<Int, SubSkill>?
+        callback: (ItemStack, World, BlockState, BlockPos) -> Pair<Int, Skill.Sub>?
     ) = EXPMap.Entry(UseBlockProvider { h, w, s, p -> callback(h, w, s, p)?.expGain }, rules, settings)
 
     protected fun settings() = Settings(DONT_CARE)
