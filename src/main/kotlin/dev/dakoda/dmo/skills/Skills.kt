@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills
 
-import dev.dakoda.dmo.skills.exp.EXPGain
+import dev.dakoda.dmo.skills.exp.data.EXPGain
 
 class Skills(
 
@@ -83,7 +83,7 @@ class Skills(
         companion object {
             const val perLevel = 100
 
-            val NULL get() = EXP(Skill.NULL)
+            val NULL get() = EXP(Skill.NULL_CAT)
         }
 
         var raw: Long = 0

@@ -42,7 +42,7 @@ object SkillRegistry {
 
 sealed class Skill(
     val name: String,
-    val icon: Item,
+    val icon: Item
 ) {
     val translatableText get() = Text.translatable("dmo.skills.${name.lowercase()}")
 
@@ -63,48 +63,67 @@ sealed class Skill(
         val CARTOGRAPHY = SubSkill(name = "CARTOGRAPHY", icon = COMPASS).register()
         val DUNGEONEER = SubSkill(name = "DUNGEONEER", icon = CHEST_MINECART).register()
         val MELEE = SubSkill(name = "MELEE", icon = IRON_SWORD).register()
-        val ARCHERY = SubSkill(name = "ARCHERY", icon = BOW).register()
+        val RANGER = SubSkill(name = "RANGER", icon = BOW).register()
         val HUNTER = SubSkill(name = "HUNTER", icon = NETHER_STAR).register()
         val ALCHEMY = SubSkill(name = "ALCHEMY", icon = POTION).register()
         val ENCHANTING = SubSkill(name = "ENCHANTING", icon = ENCHANTED_BOOK).register()
         val METALWORK = SubSkill(name = "METALWORK", icon = ANVIL).register()
         val COOKING = SubSkill(name = "COOKING", icon = CAKE).register()
 
-        val NULL = SkillCategory(name = "NULL", icon = STONE)
+        val NULL_SKILL = SubSkill(name = "NULL", icon = STONE)
+        val VARIANT = SubSkill(name = "VARIANT", icon = STONE)
+        val NULL_CAT = SkillCategory(name = "NULL", icon = STONE)
+
         val GATHERING = SkillCategory(
-            name = "GATHERING", icon = OAK_SAPLING,
+            name = "GATHERING",
+            icon = OAK_SAPLING,
             subSkills = arrayOf(
-                LUMBERING, MINING, FORAGING, FISHING
+                LUMBERING,
+                MINING,
+                FORAGING,
+                FISHING
             )
         ).register()
         val FARMING = SkillCategory(
-            name = "FARMING", icon = WHEAT,
+            name = "FARMING",
+            icon = WHEAT,
             subSkills = arrayOf(
-                CULTIVATION, ANIMAL_CARE
+                CULTIVATION,
+                ANIMAL_CARE
             )
         ).register()
         val MERCHANT = SkillCategory(
-            name = "MERCHANT", icon = EMERALD,
+            name = "MERCHANT",
+            icon = EMERALD,
             subSkills = arrayOf(
                 TRADING
             )
         ).register()
         val EXPLORER = SkillCategory(
-            name = "EXPLORER", icon = COMPASS,
+            name = "EXPLORER",
+            icon = COMPASS,
             subSkills = arrayOf(
-                CARTOGRAPHY, DUNGEONEER
+                CARTOGRAPHY,
+                DUNGEONEER
             )
         ).register()
         val COMBAT = SkillCategory(
-            name = "COMBAT", icon = IRON_SWORD,
+            name = "COMBAT",
+            icon = IRON_SWORD,
             subSkills = arrayOf(
-                MELEE, ARCHERY, HUNTER
+                MELEE,
+                RANGER,
+                HUNTER
             )
         ).register()
         val CRAFTING = SkillCategory(
-            name = "CRAFTING", icon = POTION,
+            name = "CRAFTING",
+            icon = POTION,
             subSkills = arrayOf(
-                ALCHEMY, ENCHANTING, METALWORK, COOKING
+                ALCHEMY,
+                ENCHANTING,
+                METALWORK,
+                COOKING
             )
         ).register()
     }
@@ -112,7 +131,7 @@ sealed class Skill(
 
 class SkillCategory(name: String, icon: Item, vararg val subSkills: SubSkill) : Skill(name, icon)
 
-class SubSkill(name: String, icon: Item) : Skill(name, icon) {
+open class SubSkill(name: String, icon: Item) : Skill(name, icon) {
 
     lateinit var parent: SkillCategory
 }

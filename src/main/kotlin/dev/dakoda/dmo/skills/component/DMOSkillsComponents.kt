@@ -11,13 +11,16 @@ class DMOSkillsComponents : EntityComponentInitializer {
 
     companion object {
         val COMP_SKILLS_EXP: ComponentKey<ISkillsEXPComponent> = ComponentRegistry.getOrCreate(
-            Identifier("dmo", "skills_exp"), ISkillsEXPComponent::class.java
+            Identifier("dmo", "skills_exp"),
+            ISkillsEXPComponent::class.java
         )
         val COMP_SKILLS_TRACKED: ComponentKey<ISkillsTrackedComponent> = ComponentRegistry.getOrCreate(
-            Identifier("dmo", "skills_track"), ISkillsTrackedComponent::class.java
+            Identifier("dmo", "skills_track"),
+            ISkillsTrackedComponent::class.java
         )
         val COMP_SKILLS_DISCOVERED: ComponentKey<ISkillsDiscoveredComponent> = ComponentRegistry.getOrCreate(
-            Identifier("dmo", "skills_discovered"), ISkillsDiscoveredComponent::class.java
+            Identifier("dmo", "skills_discovered"),
+            ISkillsDiscoveredComponent::class.java
         )
     }
 

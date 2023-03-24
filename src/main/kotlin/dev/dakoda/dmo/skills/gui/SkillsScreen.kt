@@ -6,8 +6,7 @@ import dev.dakoda.dmo.skills.ModHelper
 import dev.dakoda.dmo.skills.ModHelper.game
 import dev.dakoda.dmo.skills.ModHelper.topOfInventory
 import dev.dakoda.dmo.skills.Skill
-import dev.dakoda.dmo.skills.Skill.Companion.GATHERING
-import dev.dakoda.dmo.skills.Skill.Companion.NULL
+import dev.dakoda.dmo.skills.Skill.Companion.NULL_CAT
 import dev.dakoda.dmo.skills.SkillCategory
 import dev.dakoda.dmo.skills.client.ClientDMOSkills.Companion.KEYBINDING_SKILLS_MENU
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_DISCOVERED
@@ -22,7 +21,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Insets
 import net.minecraft.client.gui.Drawable
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
 import net.minecraft.client.util.math.MatrixStack
-import javax.sound.midi.Track
 
 class SkillsScreen : CottonClientScreen(object : LightweightGuiDescription() {
 
@@ -42,7 +40,7 @@ class SkillsScreen : CottonClientScreen(object : LightweightGuiDescription() {
 
     override fun shouldPause() = false
 
-    private val categories = Skill.allCategories.filter { it != NULL }
+    private val categories = Skill.allCategories.filter { it != NULL_CAT }
 
     private val activeCategory: SkillCategory
         get() = TrackLastCategory.last

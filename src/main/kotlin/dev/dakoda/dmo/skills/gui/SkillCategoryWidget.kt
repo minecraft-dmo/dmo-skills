@@ -28,7 +28,7 @@ class SkillCategoryWidget(
     var hoveredVOffset: Int = height,
     var tex: Identifier = DMOIdentifiers.WIDGETS_TEXTURE,
     texW: Int = width,
-    texH: Int = height * 2,
+    texH: Int = height * 2
 ) : TexturedButtonWidget(x, y, width, height, texU, texV, hoveredVOffset, tex, texW, texH, pressAction) {
 
     private val window get() = game.window
@@ -42,7 +42,9 @@ class SkillCategoryWidget(
     override fun renderButton(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
         if (this::renderOverride.isInitialized) {
             renderOverride(matrices, mouseX, mouseY, delta)
-        } else super.renderButton(matrices, mouseX, mouseY, delta)
+        } else {
+            super.renderButton(matrices, mouseX, mouseY, delta)
+        }
     }
 
     override fun render(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
@@ -119,10 +121,11 @@ class SkillCategoryWidget(
             skill: SkillCategory,
             xOffset: Int = 0,
             yOffset: Int = 0,
-            pressAction: PressAction,
+            pressAction: PressAction
         ) = categoryButton(
             screen,
-            skill.stack(), "dmo.skills.${skill.name.lowercase()}",
+            skill.stack(),
+            "dmo.skills.${skill.name.lowercase()}",
             pressAction
         ).apply {
             x = window.rightOfInventory + xOffset; y = window.topOfInventory + yOffset

@@ -1,7 +1,6 @@
 package dev.dakoda.dmo.skills.event
 
-import dev.dakoda.dmo.skills.SubSkill
-import dev.dakoda.dmo.skills.exp.EXPGain
+import dev.dakoda.dmo.skills.exp.data.EXPGain
 import net.fabricmc.fabric.api.event.Event
 import net.fabricmc.fabric.api.event.EventFactory
 import net.minecraft.entity.player.PlayerEntity
@@ -22,14 +21,9 @@ interface PlayerGainEXPCallback {
 
                     return ActionResult.PASS
                 }
-
-                override fun handle(playerEntity: PlayerEntity, gain: Pair<Int, SubSkill>, discovered: Boolean): ActionResult {
-                    return handle(playerEntity, EXPGain(gain), discovered)
-                }
             }
         }
     }
 
-    fun handle(playerEntity: PlayerEntity, gain: Pair<Int, SubSkill>, discovered: Boolean): ActionResult
     fun handle(playerEntity: PlayerEntity, gain: EXPGain, discovered: Boolean): ActionResult
 }

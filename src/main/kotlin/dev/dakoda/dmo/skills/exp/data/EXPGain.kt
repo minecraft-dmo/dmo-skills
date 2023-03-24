@@ -1,10 +1,10 @@
-package dev.dakoda.dmo.skills.exp
+package dev.dakoda.dmo.skills.exp.data
 
 import dev.dakoda.dmo.skills.SubSkill
 
 data class EXPGain(
-    val amount: Int,
-    val skill: SubSkill
+    var amount: Int,
+    var skill: SubSkill
 ) {
     constructor(pair: Pair<Int, SubSkill>) : this(pair.first, pair.second)
 

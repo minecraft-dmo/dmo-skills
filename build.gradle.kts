@@ -1,11 +1,13 @@
 plugins {
     id("fabric-loom")
     kotlin("jvm").version(System.getProperty("kotlin_version"))
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 base { archivesName.set(project.extra["archives_base_name"] as String) }
 version = project.extra["mod_version"] as String
 group = project.extra["maven_group"] as String
 repositories {
+    mavenCentral()
     maven("https://ladysnake.jfrog.io/artifactory/mods")
     maven("https://server.bbkr.space/artifactory/libs-release")
 }

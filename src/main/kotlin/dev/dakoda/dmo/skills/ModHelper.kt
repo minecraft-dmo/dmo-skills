@@ -8,7 +8,7 @@ import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.config.DMOSkillsConfig
 import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
-import dev.dakoda.dmo.skills.exp.EXPGain
+import dev.dakoda.dmo.skills.exp.data.EXPGain
 import net.fabricmc.fabric.api.client.screen.v1.Screens
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen

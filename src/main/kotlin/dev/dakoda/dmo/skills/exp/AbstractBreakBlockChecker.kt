@@ -4,11 +4,15 @@ import dev.dakoda.dmo.skills.ModHelper.hasSilkTouch
 import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockParams
 import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockRules
-import dev.dakoda.dmo.skills.exp.EXPGain.Provider
-import dev.dakoda.dmo.skills.exp.EXPGain.Provider.Callback
-import dev.dakoda.dmo.skills.exp.EXPGain.Provider.Params
+import dev.dakoda.dmo.skills.exp.AbstractChecker.ChecksBlocks
+import dev.dakoda.dmo.skills.exp.data.EXPGain
+import dev.dakoda.dmo.skills.exp.data.EXPGain.Provider
+import dev.dakoda.dmo.skills.exp.data.EXPGain.Provider.Callback
+import dev.dakoda.dmo.skills.exp.data.EXPGain.Provider.Default
+import dev.dakoda.dmo.skills.exp.data.EXPGain.Provider.Params
 import dev.dakoda.dmo.skills.exp.map.EXPMap
 import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.AFTER
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -18,30 +22,24 @@ import net.minecraft.registry.tag.TagKey
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-abstract class AbstractBreakBlockChecker(
-    start: AbstractBreakBlockChecker.() -> Unit,
-) : Checker<Block, BreakBlockParams, BreakBlockRules>() {
-
-    init {
-        this.start()
-    }
+abstract class AbstractBreakBlockChecker : ChecksBlocks<BreakBlockParams, BreakBlockRules>() {
 
     class BreakBlockParams(
-        val blockState: BlockState,
-        val blockPos: BlockPos,
-        val blockEntity: BlockEntity?,
         val world: World,
         val hand: ItemStack,
+        val blockPos: BlockPos,
+        val blockState: BlockState,
+        val blockEntity: BlockEntity?
     ) : Params()
 
     final override val registry = EXPMap.blocks<BreakBlockRules>()
 
     override fun haveEntryFor(key: Block, order: Settings.Order): Boolean {
-        return registry.contains(key.defaultState)
+        return registry.contains(key.defaultState, order)
     }
 
     override fun getEntry(key: Block, order: Settings.Order): EXPMap.Entry<BreakBlockRules>? {
-        return registry.get(key.defaultState)
+        return registry.get(key.defaultState, order)
     }
 
     override fun resolve(params: BreakBlockParams, order: Settings.Order): EXPGain? {
@@ -52,7 +50,9 @@ abstract class AbstractBreakBlockChecker(
             val provider = entry.expGainProvider
             if (provider is BreakBlockProvider) provider.supply(params)
             provider.resolveEXP()
-        } else null
+        } else {
+            null
+        }
     }
 
     private fun isValidGain(params: BreakBlockParams, rules: BreakBlockRules): Boolean {
@@ -62,7 +62,7 @@ abstract class AbstractBreakBlockChecker(
     }
 
     protected class BreakBlockProvider(
-        private val callback: (BlockState, BlockPos, BlockEntity?, World) -> EXPGain?,
+        private val callback: (World, BlockPos, BlockState, BlockEntity?) -> EXPGain?
     ) : Provider(), Callback<BreakBlockParams> {
 
         private lateinit var params: BreakBlockParams
@@ -73,14 +73,14 @@ abstract class AbstractBreakBlockChecker(
 
         override fun resolveEXP(): EXPGain? {
             with(params) {
-                return callback(blockState, blockPos, blockEntity, world)
+                return callback(world, blockPos, blockState, blockEntity)
             }
         }
     }
 
     class BreakBlockRules(
         val allowSilkTouch: Boolean = true,
-        val handTags: List<TagKey<Item>> = listOf(),
+        val handTags: List<TagKey<Item>> = listOf()
     ) : EXPGain.Rules()
 
     protected fun rules(
@@ -91,12 +91,14 @@ abstract class AbstractBreakBlockChecker(
     protected fun flat(
         gain: Pair<Int, SubSkill>,
         rules: BreakBlockRules = BreakBlockRules(),
-        settings: Settings = Settings()
-    ) = EXPMap.Entry(Provider.Default(EXPGain(gain)), rules, settings)
+        settings: Settings = Settings(AFTER)
+    ) = EXPMap.Entry(Default(EXPGain(gain)), rules, settings)
 
     protected fun callback(
         rules: BreakBlockRules = BreakBlockRules(),
-        settings: Settings = Settings(),
-        callback: (BlockState, BlockPos, BlockEntity?, World) -> Pair<Int, SubSkill>?,
-    ) = EXPMap.Entry(BreakBlockProvider { s, p, e, w -> callback(s, p, e, w)?.expGain }, rules, settings)
+        settings: Settings = Settings(AFTER),
+        callback: (World, BlockPos, BlockState, BlockEntity?) -> Pair<Int, SubSkill>?
+    ) = EXPMap.Entry(BreakBlockProvider { w, p, s, e -> callback(w, p, s, e)?.expGain }, rules, settings)
+
+    protected fun settings(order: Settings.Order) = Settings(order)
 }

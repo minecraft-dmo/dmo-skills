@@ -2,8 +2,6 @@ package dev.dakoda.dmo.skills.component
 
 import dev.dakoda.dmo.skills.ModHelper
 import dev.dakoda.dmo.skills.Skill
-import dev.dakoda.dmo.skills.Skills
-import dev.dakoda.dmo.skills.Skills.EXP
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent
 import net.minecraft.nbt.NbtCompound
 

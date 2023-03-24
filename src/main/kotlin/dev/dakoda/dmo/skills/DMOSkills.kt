@@ -4,16 +4,20 @@ import com.google.gson.GsonBuilder
 import dev.dakoda.dmo.skills.ModHelper.CONFIG
 import dev.dakoda.dmo.skills.ModHelper.LOGGER
 import dev.dakoda.dmo.skills.config.DMOSkillsConfig
-import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker
 import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockParams
+import dev.dakoda.dmo.skills.exp.AbstractEntityKillChecker.EntityKillParams
+import dev.dakoda.dmo.skills.exp.AbstractUseBlockChecker.UseBlockParams
 import dev.dakoda.dmo.skills.exp.BreakBlockChecker
-import dev.dakoda.dmo.skills.exp.CombatEXPCheckerOld
-import dev.dakoda.dmo.skills.exp.UseBlockEXPCheckerOld
-import dev.dakoda.dmo.skills.exp.map.EXPMap
-import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order
+import dev.dakoda.dmo.skills.exp.CookingChecker
+import dev.dakoda.dmo.skills.exp.EntityHuntChecker
+import dev.dakoda.dmo.skills.exp.EntityKillChecker
+import dev.dakoda.dmo.skills.exp.FishingChecker
+import dev.dakoda.dmo.skills.exp.UseBlockChecker
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.AFTER
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.BEFORE
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.DONT_CARE
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.loader.api.FabricLoader
@@ -49,11 +53,20 @@ class DMOSkills : ModInitializer {
             CONFIG = DMOSkillsConfig.default
         }
 
+        initialiseCheckers()
+
         PlayerBlockBreakEvents.AFTER.register { world, player, blockPos, blockState, blockEntity ->
             if (player.isSurvival) {
-                BreakBlockChecker.resolve(BreakBlockParams(
-                    blockState, blockPos, blockEntity, world, player.mainHandStack
-                ), Order.AFTER)?.let {
+                BreakBlockChecker.resolve(
+                    BreakBlockParams(
+                        world,
+                        player.mainHandStack,
+                        blockPos,
+                        blockState,
+                        blockEntity
+                    ),
+                    order = AFTER
+                )?.let {
                     ModHelper.gainEXP(player, it)
                 }
             }
@@ -61,18 +74,28 @@ class DMOSkills : ModInitializer {
 
         PlayerBlockBreakEvents.BEFORE.register { world, player, blockPos, blockState, blockEntity ->
             if (player.isSurvival) {
-                BreakBlockChecker.resolve(BreakBlockParams(
-                    blockState, blockPos, blockEntity, world, player.mainHandStack
-                ), Order.BEFORE)?.let {
+                BreakBlockChecker.resolve(
+                    BreakBlockParams(
+                        world,
+                        player.mainHandStack,
+                        blockPos,
+                        blockState,
+                        blockEntity
+                    ),
+                    order = BEFORE
+                )?.let {
                     ModHelper.gainEXP(player, it)
                 }
             }
             true
         }
 
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register { _, entity, killedEntity ->
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register { world, entity, killedEntity ->
             if (entity is PlayerEntity && entity.isSurvival) {
-                CombatEXPCheckerOld.Kill.determineEXPGain(entity.mainHandStack, killedEntity).filterNotNull().forEach {
+                EntityKillChecker.resolve(EntityKillParams(world, entity, killedEntity), order = DONT_CARE)?.let {
+                    ModHelper.gainEXP(entity, it)
+                }
+                EntityHuntChecker.resolve(EntityKillParams(world, entity, killedEntity), order = DONT_CARE)?.let {
                     ModHelper.gainEXP(entity, it)
                 }
             }
@@ -80,16 +103,15 @@ class DMOSkills : ModInitializer {
 
         UseBlockCallback.EVENT.register { player, world, _, entityHitResult ->
             if (player.isSurvival) {
-                UseBlockEXPCheckerOld.doCallback(world.getBlockState(entityHitResult.blockPos), entityHitResult.blockPos, world, player.mainHandStack)?.let {
-                    ModHelper.gainEXP(player, it)
-                }
-            }
-            return@register PASS
-        }
-
-        AttackEntityCallback.EVENT.register { player, _, _, hitEntity, _ ->
-            if (player.isSurvival) {
-                CombatEXPCheckerOld.Attack.determineEXPGain(player.mainHandStack, hitEntity)?.let {
+                UseBlockChecker.resolve(
+                    UseBlockParams(
+                        player.mainHandStack,
+                        world,
+                        world.getBlockState(entityHitResult.blockPos),
+                        entityHitResult.blockPos
+                    ),
+                    order = DONT_CARE
+                )?.let {
                     ModHelper.gainEXP(player, it)
                 }
             }
@@ -98,4 +120,8 @@ class DMOSkills : ModInitializer {
     }
 
     private val PlayerEntity.isSurvival get() = !this.isCreative && !this.isSpectator
+
+    private fun initialiseCheckers() {
+        BreakBlockChecker; CookingChecker; EntityHuntChecker; EntityKillChecker; FishingChecker
+    }
 }

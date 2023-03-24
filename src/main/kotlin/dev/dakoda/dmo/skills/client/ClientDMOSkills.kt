@@ -1,12 +1,10 @@
 package dev.dakoda.dmo.skills.client
 
 import dev.dakoda.dmo.skills.ModHelper.buttons
-import dev.dakoda.dmo.skills.ModHelper.game
-import dev.dakoda.dmo.skills.SubSkill
 import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
+import dev.dakoda.dmo.skills.exp.data.EXPGain
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget
 import dev.dakoda.dmo.skills.gui.SkillsScreen
-import dev.dakoda.dmo.skills.gui.toast.DiscoveryToast
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
@@ -18,7 +16,6 @@ import net.minecraft.client.util.InputUtil
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResult.PASS
-import net.minecraft.util.ActionResult.SUCCESS
 import org.lwjgl.glfw.GLFW
 
 class ClientDMOSkills : ClientModInitializer {
@@ -29,7 +26,7 @@ class ClientDMOSkills : ClientModInitializer {
                 "dmo.skills.keybindings.open_skills_menu",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_K,
-                "dmo.skills.keybindings.category",
+                "dmo.skills.keybindings.category"
             )
         )
     }
@@ -39,7 +36,7 @@ class ClientDMOSkills : ClientModInitializer {
         addSkillsButtonToInventory()
         HudRenderCallback.EVENT.register(ClientTrackedSkillHUD.LISTENER)
         PlayerGainEXPCallback.EVENT.register(object : PlayerGainEXPCallback {
-            override fun handle(playerEntity: PlayerEntity, gain: Pair<Int, SubSkill>, discovered: Boolean): ActionResult {
+            override fun handle(playerEntity: PlayerEntity, gain: EXPGain, discovered: Boolean): ActionResult {
 //                if (discovered) {
 //                    game.toastManager.add(DiscoveryToast(gain.second))
 //                }

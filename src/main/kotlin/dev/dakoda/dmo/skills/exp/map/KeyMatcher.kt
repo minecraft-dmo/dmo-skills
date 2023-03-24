@@ -2,6 +2,7 @@ package dev.dakoda.dmo.skills.exp.map
 
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.registry.tag.TagKey
@@ -34,5 +35,17 @@ sealed interface KeyMatcher<T> {
             override fun matches(itemStack: ItemStack): Boolean = itemStack.isIn(tagKey)
         }
     }
-}
 
+    sealed interface Entities : KeyMatcher<EntityType<*>> {
+
+        data class Generic(private val _entityType: EntityType<*>) : Entities {
+            @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
+            override fun matches(entityType: EntityType<*>): Boolean = entityType == _entityType
+        }
+
+        data class Tag(private val tagKey: TagKey<EntityType<*>>) : Entities {
+            @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
+            override fun matches(entityType: EntityType<*>): Boolean = entityType.isIn(tagKey)
+        }
+    }
+}

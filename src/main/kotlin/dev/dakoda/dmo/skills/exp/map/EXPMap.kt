@@ -1,7 +1,9 @@
 package dev.dakoda.dmo.skills.exp.map
 
-import dev.dakoda.dmo.skills.exp.EXPGain
+import dev.dakoda.dmo.skills.exp.data.EXPGain
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.DONT_CARE
 import net.minecraft.block.BlockState
+import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
 
 class EXPMap<T, R : EXPGain.Rules> {
@@ -11,37 +13,31 @@ class EXPMap<T, R : EXPGain.Rules> {
         _map[keyMatcher] = entry
     }
 
-    fun get(t: T): Entry<R>? {
-        return _map.entries.firstOrNull { (key, _) -> key.matches(t) }?.value
+    fun get(t: T, order: Entry.Settings.Order): Entry<R>? {
+        return _map.entries.firstOrNull { (key, entry) ->
+            entry.settings.order == order && key.matches(t)
+        }?.value
     }
 
-    fun contains(t: T): Boolean {
-        return _map.keys.any { it.matches(t) }
+    fun contains(t: T, order: Entry.Settings.Order): Boolean {
+        return _map.any { (matcher, entry) ->
+            entry.settings.order == order && matcher.matches(t)
+        }
     }
 
     companion object {
         fun <R : EXPGain.Rules> items() = EXPMap<ItemStack, R>()
         fun <R : EXPGain.Rules> blocks() = EXPMap<BlockState, R>()
+        fun <R : EXPGain.Rules> entities() = EXPMap<EntityType<*>, R>()
     }
 
     data class Entry<R : EXPGain.Rules>(
         val expGainProvider: EXPGain.Provider,
         val rules: R,
-        val settings: Settings = Settings()
+        val settings: Settings = Settings(DONT_CARE)
     ) {
-        data class Settings(val order: Order = Order.AFTER) {
-            enum class Order { BEFORE, AFTER }
+        open class Settings(val order: Order) {
+            enum class Order { BEFORE, AFTER, DONT_CARE }
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-

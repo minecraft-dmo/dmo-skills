@@ -1,9 +1,10 @@
 package dev.dakoda.dmo.skills.mixin.fishing;
 
 import dev.dakoda.dmo.skills.ModHelper;
-import dev.dakoda.dmo.skills.SubSkill;
-import dev.dakoda.dmo.skills.exp.FishingEXPCheckerOld;
-import kotlin.Pair;
+import dev.dakoda.dmo.skills.exp.AbstractFishingChecker.FishingParams;
+import dev.dakoda.dmo.skills.exp.FishingChecker;
+import dev.dakoda.dmo.skills.exp.data.EXPGain;
+import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
 import net.minecraft.item.ItemStack;
@@ -38,7 +39,7 @@ public class FishingBobberEntityMixin {
             List<Object> list, Iterator<Object> iterator,
             ItemStack itemStack
     ) {
-        Pair<Integer, SubSkill> gain = FishingEXPCheckerOld.INSTANCE.determineEXPGain(itemStack);
-        ModHelper.INSTANCE.gainEXP(playerEntity, gain);
+        EXPGain gain = FishingChecker.INSTANCE.resolve(new FishingParams(itemStack.getItem()), Order.DONT_CARE);
+        if (gain != null) ModHelper.INSTANCE.gainEXP(playerEntity, gain);
     }
 }

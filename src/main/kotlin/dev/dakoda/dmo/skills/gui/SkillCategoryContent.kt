@@ -36,12 +36,14 @@ class SkillCategoryContent(
     fun titleX() = window.leftOfInventory.toFloat() + 48f
     fun titleY(index: Int) = window.topOfInventory.toFloat() + 40f + (index * 18f)
 
-    fun getDrawables(skills: Skills, discoveries: Map<Skill, Boolean>) = getSubSkillTexts(skills.subSkills(category).filter {
-        shouldShow(it.skill, discoveries)
-    }) + getHeader()
+    fun getDrawables(skills: Skills, discoveries: Map<Skill, Boolean>) = getSubSkillTexts(
+        skills.subSkills(category).filter {
+            shouldShow(it.skill, discoveries)
+        }
+    ) + getHeader()
 
     fun getDrawableChildren(skills: Skills, discoveries: Map<Skill, Boolean>): List<ButtonWidget> {
-        with(skills.subSkills(category).filter { shouldShow(it.skill, discoveries )}) {
+        with(skills.subSkills(category).filter { shouldShow(it.skill, discoveries) }) {
             return getSubSkillPinToggle(this) + getSubSkillProgressBar(this)
         }
     }
@@ -77,7 +79,8 @@ class SkillCategoryContent(
                     game.textRenderer.draw(
                         matrices,
                         Text.translatable("$translationPrefix.${exp.skill.name.lowercase()}"),
-                        titleX(), titleY(index),
+                        titleX(),
+                        titleY(index),
                         0x000000
                     )
                 }
@@ -88,11 +91,17 @@ class SkillCategoryContent(
     private fun getSubSkillPinToggle(subSkills: List<Skills.EXP>): List<ButtonWidget> {
         return subSkills.mapIndexed { index, exp ->
             object : ButtonWidget(
-                titleX().toInt() + BAR_WIDTH - 16, titleY(index).toInt() - 2, 12, 12, Text.empty(), {
+                titleX().toInt() + BAR_WIDTH - 16,
+                titleY(index).toInt() - 2,
+                12,
+                12,
+                Text.empty(),
+                {
 //                    println("Toggling pin for ${exp.skill.name}")
                     (COMP_SKILLS_TRACKED.get(game.player!!) as SkillsTrackedComponent).toggle(exp.skill as SubSkill)
                     COMP_SKILLS_TRACKED.sync(game.player!!)
-                }, NarrationSupplier { Text.empty() }
+                },
+                NarrationSupplier { Text.empty() }
             ) {
                 override fun render(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
                     val isTracked = COMP_SKILLS_TRACKED.get(game.player!!).trackedSkills[exp.skill] == 1
@@ -114,7 +123,13 @@ class SkillCategoryContent(
             val xx = titleX().toInt() - 1
             val yy = titleY(index).toInt() + 9
             object : ButtonWidget(
-                xx, yy, BAR_WIDTH, 7, Text.empty(), { }, NarrationSupplier { Text.empty() }
+                xx,
+                yy,
+                BAR_WIDTH,
+                7,
+                Text.empty(),
+                { },
+                NarrationSupplier { Text.empty() }
             ) {
 
                 override fun render(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
@@ -140,7 +155,8 @@ class SkillCategoryContent(
                         game.currentScreen?.renderTooltip(
                             matrices,
                             Text.translatable("dmo.skills.progress", exp.raw, Skills.EXP.perLevel),
-                            mouseX, mouseY
+                            mouseX,
+                            mouseY
                         )
                     }
                 }
