@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.potion.Potion
 import net.minecraft.registry.tag.TagKey
 
 sealed interface KeyMatcher<T> {
@@ -46,6 +47,14 @@ sealed interface KeyMatcher<T> {
         data class Tag(private val tagKey: TagKey<EntityType<*>>) : Entities {
             @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
             override fun matches(entityType: EntityType<*>): Boolean = entityType.isIn(tagKey)
+        }
+    }
+
+    sealed interface Potions : KeyMatcher<Potion> {
+
+        data class Generic(private val _potion: Potion) : Potions {
+            @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
+            override fun matches(potion: Potion): Boolean = _potion == potion
         }
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityType
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.potion.Potion
 import net.minecraft.registry.tag.TagKey
 
 abstract class AbstractChecker<Key, Params : EXPGain.Provider.Params, R : EXPGain.Rules> {
@@ -32,6 +33,10 @@ abstract class AbstractChecker<Key, Params : EXPGain.Provider.Params, R : EXPGai
     abstract class ChecksEntities<Params : EXPGain.Provider.Params, R : EXPGain.Rules> : AbstractChecker<EntityType<*>, Params, R>() {
         protected operator fun <R : EXPGain.Rules> EXPMap<EntityType<*>, R>.set(entity: EntityType<*>, entry: EXPMap.Entry<R>) = put(KeyMatcher.Entities.Generic(entity), entry)
         protected operator fun <R : EXPGain.Rules> EXPMap<EntityType<*>, R>.set(tag: TagKey<EntityType<*>>, entry: EXPMap.Entry<R>) = put(KeyMatcher.Entities.Tag(tag), entry)
+    }
+
+    abstract class ChecksPotions<Params : EXPGain.Provider.Params, R : EXPGain.Rules> : AbstractChecker<Potion, Params, R>() {
+        protected operator fun <R : EXPGain.Rules> EXPMap<Potion, R>.set(potion: Potion, entry: EXPMap.Entry<R>) = put(KeyMatcher.Potions.Generic(potion), entry)
     }
 
     val Pair<Int, Skill.Sub>.expGain get() = EXPGain(this)

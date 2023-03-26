@@ -5,6 +5,7 @@ import dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order.DONT_CARE
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityType
 import net.minecraft.item.ItemStack
+import net.minecraft.potion.Potion
 
 class EXPMap<T, R : EXPGain.Rules> {
     private val _map = mutableMapOf<KeyMatcher<T>, Entry<R>>()
@@ -29,6 +30,7 @@ class EXPMap<T, R : EXPGain.Rules> {
         fun <R : EXPGain.Rules> items() = EXPMap<ItemStack, R>()
         fun <R : EXPGain.Rules> blocks() = EXPMap<BlockState, R>()
         fun <R : EXPGain.Rules> entities() = EXPMap<EntityType<*>, R>()
+        fun <R : EXPGain.Rules> potions() = EXPMap<Potion, R>()
     }
 
     data class Entry<R : EXPGain.Rules>(

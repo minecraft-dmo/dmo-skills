@@ -29,9 +29,11 @@ import net.minecraft.block.entity.EnchantingTableBlockEntity
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen
 import net.minecraft.entity.boss.dragon.EnderDragonEntity
 import net.minecraft.entity.mob.GhastEntity
+import net.minecraft.entity.mob.ZombieVillagerEntity
 import net.minecraft.entity.passive.CowEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ShieldItem
+import net.minecraft.screen.GrindstoneScreenHandler
 import net.minecraft.screen.slot.TradeOutputSlot
 import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResult.PASS
@@ -139,12 +141,6 @@ class ModInitialiser : ModInitializer {
             }
             return@register PASS
         }
-
-//        PlayerAdvancementEvent.EVENT.register(object : PlayerAdvancementEvent {
-//            override fun handle(playerEntity: PlayerEntity, advancement: Advancement): ActionResult {
-//                AdvancementCriterion
-//            }
-//        })
     }
 
     private val PlayerEntity.isSurvival get() = !this.isCreative && !this.isSpectator

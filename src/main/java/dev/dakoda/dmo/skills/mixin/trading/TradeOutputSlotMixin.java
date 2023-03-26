@@ -2,6 +2,7 @@ package dev.dakoda.dmo.skills.mixin.trading;
 
 import dev.dakoda.dmo.skills.DMOSkills;
 import dev.dakoda.dmo.skills.Skill;
+import dev.dakoda.dmo.skills.config.DMOConfigTrading;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,21 +44,29 @@ abstract class TradeOutputSlotMixin {
                 ItemStack itemOne = tradeOffer.getOriginalFirstBuyItem();
                 ItemStack itemTwo = tradeOffer.getSecondBuyItem();
 
-                int itemOneEXP = itemOne.getCount() / 2;
-                if (itemOne.getItem() == Items.EMERALD) itemOneEXP *= 8;
+                DMOConfigTrading.Sources.Trading config = DMOSkills.CONFIG.getExp().getTrading().getSources().getTrading();
 
-                int itemTwoEXP = itemOne.getCount() / 2;
-                if (itemTwo.getItem() == Items.EMERALD) itemTwoEXP *= 8;
+                float itemOneEXP = itemOne.getCount() * (config.getExpPerItem());
+                if (itemOne.getItem() == Items.EMERALD) {
+                    itemOneEXP /= (config.getExpPerItem());
+                    itemOneEXP *= (config.getExpPerEmerald());
+                }
+
+                float itemTwoEXP = itemOne.getCount() * (config.getExpPerItem());
+                if (itemTwo.getItem() == Items.EMERALD) {
+                    itemTwoEXP /= (config.getExpPerItem());
+                    itemTwoEXP *= (config.getExpPerEmerald());
+                }
 
                 if (itemOne.getItem() == Items.AIR) itemOneEXP *= 0;
                 if (itemTwo.getItem() == Items.AIR) itemTwoEXP *= 0;
 
                 float levelMultiplier = switch (merchantLevel) {
-                    case 2 -> 1.08f;
-                    case 3 -> 1.16f;
-                    case 4 -> 1.24f;
-                    case 5 -> 1.32f;
-                    default -> 1.0f;
+                    case 2 -> config.getApprenticeMultiplier();
+                    case 3 -> config.getJourneymanMultiplier();
+                    case 4 -> config.getExpertMultiplier();
+                    case 5 -> config.getMasterMultiplier();
+                    default -> config.getNoviceMultiplier();
                 };
 
                 int finalEXP = (int) Math.floor((itemOneEXP * levelMultiplier) + (itemTwoEXP * levelMultiplier));

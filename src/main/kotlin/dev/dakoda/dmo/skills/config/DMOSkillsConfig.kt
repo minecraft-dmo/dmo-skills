@@ -60,7 +60,7 @@ class DMOSkillsConfig {
         var animalCare = DMOConfigGeneric()
 
         @SerializedName("trading")
-        var trading = DMOConfigGeneric()
+        var trading = DMOConfigTrading()
 
         @SerializedName("cartography")
         var cartography = DMOConfigGeneric()
@@ -75,13 +75,13 @@ class DMOSkillsConfig {
         var hunter = DMOConfigHunter()
 
         @SerializedName("alchemy")
-        var alchemy = DMOConfigGeneric()
+        var alchemy = DMOConfigAlchemy()
 
         @SerializedName("enchanting")
         var enchanting = DMOConfigGeneric()
 
         @SerializedName("metalwork")
-        var metalwork = DMOConfigGeneric()
+        var metalwork = DMOConfigMetalwork()
 
         @SerializedName("cooking")
         var cooking = DMOConfigCooking()
