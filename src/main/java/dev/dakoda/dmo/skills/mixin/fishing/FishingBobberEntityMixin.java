@@ -39,7 +39,9 @@ public class FishingBobberEntityMixin {
             List<Object> list, Iterator<Object> iterator,
             ItemStack itemStack
     ) {
-        EXPGain gain = FishingChecker.INSTANCE.resolve(new FishingParams(itemStack.getItem()), Order.DONT_CARE);
-        if (gain != null) DMOSkills.INSTANCE.gainEXP(playerEntity, gain);
+        if (!playerEntity.isCreative() && !playerEntity.isSpectator()) {
+            EXPGain gain = FishingChecker.INSTANCE.resolve(new FishingParams(itemStack.getItem()), Order.DONT_CARE);
+            if (gain != null) DMOSkills.INSTANCE.gainEXP(playerEntity, gain);
+        }
     }
 }

@@ -8,7 +8,14 @@
     "dungeoneer.LootableContainerBlockEntityAccessor",
     "dungeoneer.LootableContainerBlockEntityMixin",
     "dungeoneer.StorageMinecartEntityMixin",
-    "fishing.FishingBobberEntityMixin"
+    "farming.AbstractHorseEntityMixin",
+    "farming.AnimalEntityMixin",
+    "farming.OcelotEntityMixin",
+    "farming.TameableEntityMixin",
+    "fishing.FishingBobberEntityMixin",
+    "trading.BuyForOneEmeraldFactoryAccessor",
+    "trading.TradeOutputSlotAccessor",
+    "trading.TradeOutputSlotMixin"
   ],
   "client": [],
   "injectors": {

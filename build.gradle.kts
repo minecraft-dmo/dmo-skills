@@ -14,14 +14,12 @@ repositories {
 dependencies {
     minecraft("com.mojang", "minecraft", project.extra["minecraft_version"] as String)
     mappings("net.fabricmc", "yarn", project.extra["yarn_mappings"] as String, null, "v2")
-
-    implementation("com.google.code.gson:gson:2.10.1")
-    include("com.google.code.gson:gson:2.10.1")
-
     modImplementation("net.fabricmc", "fabric-loader", project.extra["loader_version"] as String)
     modImplementation("net.fabricmc.fabric-api", "fabric-api", project.extra["fabric_version"] as String)
     modImplementation("net.fabricmc", "fabric-language-kotlin", project.extra["fabric_language_kotlin_version"] as String)
 
+    implementation("com.google.code.gson:gson:2.10.1")
+    include("com.google.code.gson:gson:2.10.1")
     modImplementation("io.github.cottonmc:LibGui:6.5.3+1.19.3")
     include("io.github.cottonmc:LibGui:6.5.3+1.19.3")
     modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.1.0")

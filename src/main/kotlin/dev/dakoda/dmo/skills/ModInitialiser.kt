@@ -21,8 +21,12 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.entity.passive.CowEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.screen.slot.TradeOutputSlot
 import net.minecraft.util.ActionResult.PASS
+import net.minecraft.village.TradeOffer
+import net.minecraft.village.TradeOffers
 import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.nio.file.Files
@@ -129,6 +133,11 @@ class ModInitialiser : ModInitializer {
     private val PlayerEntity.isSurvival get() = !this.isCreative && !this.isSpectator
 
     private fun initialiseCheckers() {
-        BreakBlockChecker; CookingChecker; EntityHuntChecker; EntityKillChecker; FishingChecker
+        BreakBlockChecker; EntityHuntChecker; EntityKillChecker; FishingChecker
+
+        if (FabricLoader.getInstance().isModLoaded("dmo-cooking")) {
+            CONFIG.exp.cooking.overridden = true
+            println("Cooking EXP has been overridden by dmo-cooking; disabling crafting hooks")
+        } else CookingChecker
     }
 }

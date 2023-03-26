@@ -113,6 +113,7 @@ object BreakBlockChecker : AbstractBreakBlockChecker() {
         registry[Blocks.CHEST] = callback(settings = settings(order = BEFORE), callback = lootableContainerCallback)
         registry[Blocks.BARREL] = callback(settings = settings(order = BEFORE), callback = lootableContainerCallback)
         registry[Blocks.TRAPPED_CHEST] = callback(settings = settings(order = BEFORE), callback = lootableContainerCallback)
+        registry[Blocks.SPAWNER] = flat(15 to DUNGEONEER)
     }
 
     private fun BlockPos.horizontals(world: World) = listOf(north(), east(), south(), west()).map {
