@@ -1,6 +1,6 @@
 package dev.dakoda.dmo.skills.client
 
-import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
+import dev.dakoda.dmo.skills.event.PlayerGainEXPEvent
 import dev.dakoda.dmo.skills.exp.data.EXPGain
 import dev.dakoda.dmo.skills.gui.SkillCategoryWidget
 import dev.dakoda.dmo.skills.gui.SkillsScreen
@@ -37,7 +37,7 @@ class ClientModInitialiser : ClientModInitializer {
         registerKeybindings()
         addSkillsButtonToInventory()
         HudRenderCallback.EVENT.register(ClientTrackedSkillHUD.LISTENER)
-        PlayerGainEXPCallback.EVENT.register(object : PlayerGainEXPCallback {
+        PlayerGainEXPEvent.EVENT.register(object : PlayerGainEXPEvent {
             override fun handle(playerEntity: PlayerEntity, gain: EXPGain, discovered: Boolean): ActionResult {
 //                if (discovered) {
 //                    game.toastManager.add(DiscoveryToast(gain.second))

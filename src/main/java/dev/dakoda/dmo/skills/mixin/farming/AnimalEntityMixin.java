@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(AnimalEntity.class)
-public class AnimalEntityMixin {
+public abstract class AnimalEntityMixin {
 
     @Shadow private @Nullable UUID lovingPlayer;
 

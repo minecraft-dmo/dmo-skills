@@ -6,13 +6,13 @@ import net.fabricmc.fabric.api.event.EventFactory
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.ActionResult
 
-interface PlayerGainEXPCallback {
+interface PlayerGainEXPEvent {
 
     companion object {
-        val EVENT: Event<PlayerGainEXPCallback> = EventFactory.createArrayBacked(
-            PlayerGainEXPCallback::class.java
+        val EVENT: Event<PlayerGainEXPEvent> = EventFactory.createArrayBacked(
+            PlayerGainEXPEvent::class.java
         ) {
-            object : PlayerGainEXPCallback {
+            object : PlayerGainEXPEvent {
                 override fun handle(playerEntity: PlayerEntity, gain: EXPGain, discovered: Boolean): ActionResult {
                     for (listener in it) {
                         val result = listener.handle(playerEntity, gain, discovered)

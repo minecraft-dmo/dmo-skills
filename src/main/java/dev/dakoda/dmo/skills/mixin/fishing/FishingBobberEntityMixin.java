@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Mixin(FishingBobberEntity.class)
-public class FishingBobberEntityMixin {
+public abstract class FishingBobberEntityMixin {
 
     @Inject(
             method = "use",

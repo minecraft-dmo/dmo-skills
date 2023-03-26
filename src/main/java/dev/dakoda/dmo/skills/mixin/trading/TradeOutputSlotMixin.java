@@ -28,8 +28,6 @@ abstract class TradeOutputSlotMixin {
 
     @Shadow @Final private Merchant merchant;
 
-    @Shadow @Final private PlayerEntity player;
-
     @Inject(method = "onTakeItem", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/village/Merchant;trade(Lnet/minecraft/village/TradeOffer;)V",

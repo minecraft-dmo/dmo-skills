@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LootableContainerBlockEntity.class)
-public class LootableContainerBlockEntityMixin {
+public abstract class LootableContainerBlockEntityMixin {
 
     @Shadow @Nullable protected Identifier lootTableId;
 

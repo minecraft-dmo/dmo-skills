@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractHorseEntity.class)
-public class AbstractHorseEntityMixin {
+public abstract class AbstractHorseEntityMixin {
 
     @Inject(method = "bondWithPlayer", at = @At("HEAD"))
     void mixin_bondWithPlayer(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {

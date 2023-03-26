@@ -21,7 +21,7 @@ import static dev.dakoda.dmo.skills.exp.map.EXPMap.Entry.Settings.Order;
 
 @SuppressWarnings("DuplicatedCode")
 @Mixin(CraftingResultSlot.class)
-class CraftingResultSlotMixin extends Slot {
+abstract class CraftingResultSlotMixin extends Slot {
 
     @Shadow @Final private PlayerEntity player;
 

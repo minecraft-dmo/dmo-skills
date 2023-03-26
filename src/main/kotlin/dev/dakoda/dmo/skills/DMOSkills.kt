@@ -5,7 +5,7 @@ package dev.dakoda.dmo.skills
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_DISCOVERED
 import dev.dakoda.dmo.skills.component.DMOSkillsComponents.Companion.COMP_SKILLS_EXP
 import dev.dakoda.dmo.skills.config.DMOSkillsConfig
-import dev.dakoda.dmo.skills.event.PlayerGainEXPCallback
+import dev.dakoda.dmo.skills.event.PlayerGainEXPEvent
 import dev.dakoda.dmo.skills.exp.data.EXPGain
 import net.minecraft.client.MinecraftClient
 import net.minecraft.enchantment.EnchantmentHelper
@@ -40,7 +40,7 @@ object DMOSkills {
 
         val playerSkills = COMP_SKILLS_EXP[player].skills
         playerSkills.increase(gain)
-        PlayerGainEXPCallback.EVENT.invoker().handle(player, gain, discoveredNewSkill)
+        PlayerGainEXPEvent.EVENT.invoker().handle(player, gain, discoveredNewSkill)
         COMP_SKILLS_EXP.sync(player)
         COMP_SKILLS_DISCOVERED.sync(player)
     }
