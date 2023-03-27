@@ -39,7 +39,6 @@ sealed class Skill(
         val CULTIVATION = Sub(name = "CULTIVATION", icon = WHEAT).register()
         val ANIMAL_CARE = Sub(name = "ANIMAL_CARE", icon = MILK_BUCKET).register()
         val TRADING = Sub(name = "TRADING", icon = EMERALD).register()
-        val CARTOGRAPHY = Sub(name = "CARTOGRAPHY", icon = COMPASS).register()
         val DUNGEONEER = Sub(name = "DUNGEONEER", icon = CHEST_MINECART).register()
         val MELEE = Sub(name = "MELEE", icon = IRON_SWORD).register()
         val RANGER = Sub(name = "RANGER", icon = BOW).register()
@@ -82,7 +81,6 @@ sealed class Skill(
             name = "EXPLORER",
             icon = COMPASS,
             subSkills = arrayOf(
-                CARTOGRAPHY,
                 DUNGEONEER
             )
         ).register()

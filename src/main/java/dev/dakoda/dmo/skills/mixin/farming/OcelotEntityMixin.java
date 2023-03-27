@@ -26,7 +26,7 @@ public abstract class OcelotEntityMixin {
     void mixin_interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (player != null && !player.isCreative() && !player.isSpectator()) {
             if (!isTrusting()) {
-                DMOSkills.INSTANCE.gainEXP(player, 25, Skill.Companion.getANIMAL_CARE());
+                DMOSkills.INSTANCE.gainEXP(player, DMOSkills.CONFIG.getExp().getAnimalCare().getSources().getAction().getTaming(), Skill.Companion.getANIMAL_CARE());
             }
         }
     }

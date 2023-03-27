@@ -15,7 +15,7 @@ public abstract class TameableEntityMixin {
     @Inject(method = "setOwner", at = @At("HEAD"))
     void mixin_setOwner(PlayerEntity player, CallbackInfo ci) {
         if (player != null && !player.isCreative() && !player.isSpectator()) {
-            DMOSkills.INSTANCE.gainEXP(player, 25, Skill.Companion.getANIMAL_CARE());
+            DMOSkills.INSTANCE.gainEXP(player, DMOSkills.CONFIG.getExp().getAnimalCare().getSources().getAction().getTaming(), Skill.Companion.getANIMAL_CARE());
         }
     }
 }

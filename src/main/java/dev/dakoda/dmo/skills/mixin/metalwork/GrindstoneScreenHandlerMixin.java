@@ -37,7 +37,7 @@ public class GrindstoneScreenHandlerMixin {
             int outputHealth = stack.getMaxDamage() - stack.getDamage();
             float outputPercent = (float) outputHealth / stack.getMaxDamage();
 
-            float maximumEXP = configActions.getGrindstoneRepairMaximum();
+            float maximumEXP = configActions.getRepairMaximumGain();
             if (outputPercent < 1f) {
                 DMOSkills.INSTANCE.gainEXP(player, (int) maximumEXP, Skill.Companion.getMETALWORK());
             } else {

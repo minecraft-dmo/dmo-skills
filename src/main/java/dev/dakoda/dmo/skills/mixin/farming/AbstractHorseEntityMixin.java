@@ -15,7 +15,7 @@ public abstract class AbstractHorseEntityMixin {
     @Inject(method = "bondWithPlayer", at = @At("HEAD"))
     void mixin_bondWithPlayer(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         if (player != null && !player.isCreative() && !player.isSpectator()) {
-            DMOSkills.INSTANCE.gainEXP(player, 25, Skill.Companion.getANIMAL_CARE());
+            DMOSkills.INSTANCE.gainEXP(player, DMOSkills.CONFIG.getExp().getAnimalCare().getSources().getAction().getTaming(), Skill.Companion.getANIMAL_CARE());
         }
     }
 }

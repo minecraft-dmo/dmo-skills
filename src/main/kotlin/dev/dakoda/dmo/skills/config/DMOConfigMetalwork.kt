@@ -41,14 +41,20 @@ class DMOConfigMetalwork {
         }
 
         class Action {
-            @SerializedName("grindstone_repair_minimum_damage")
-            var grindstoneRepairMinimumDamage: Float = 0.1f
+            @SerializedName("repair_minimum_damage_percent")
+            var repairMinimumDamagePercent: Float = 0.1f
 
-            @SerializedName("grindstone_repair_maximum")
-            var grindstoneRepairMaximum: Int = 30
+            @SerializedName("repair_standard")
+            var repairStandard: Int = 6
+
+            @SerializedName("repair_maximum_gain")
+            var repairMaximumGain: Int = 30
 
             @SerializedName("grindstone_disenchant")
-            var grindstoneDisenchant: Int = 6
+            var grindstoneDisenchant: Int = 5
+
+            @SerializedName("upgrade_to_netherite")
+            var upgradeToNetherite: Int = 15
         }
     }
 }

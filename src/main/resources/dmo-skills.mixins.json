@@ -16,8 +16,10 @@
     "farming.OcelotEntityMixin",
     "farming.TameableEntityMixin",
     "fishing.FishingBobberEntityMixin",
+    "metalwork.AnvilScreenHandlerMixin",
     "metalwork.GrindstoneScreenHandlerAccessor",
     "metalwork.GrindstoneScreenHandlerMixin",
+    "metalwork.SmithingScreenHandlerMixin",
     "trading.TradeOutputSlotMixin"
   ],
   "client": [],

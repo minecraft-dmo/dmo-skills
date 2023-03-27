@@ -22,7 +22,11 @@ public abstract class AnimalEntityMixin {
     @Inject(method = "lovePlayer", at = @At("HEAD"))
     void mixin_lovePlayer(PlayerEntity player, CallbackInfo ci) {
         if (player != null && !player.isCreative() && !player.isSpectator()) {
-            DMOSkills.INSTANCE.gainEXP(player, 5, Skill.Companion.getANIMAL_CARE());
+            DMOSkills.INSTANCE.gainEXP(
+                    player,
+                    DMOSkills.CONFIG.getExp().getAnimalCare().getSources().getAction().getFeeding(),
+                    Skill.Companion.getANIMAL_CARE()
+            );
         }
     }
 
@@ -31,13 +35,21 @@ public abstract class AnimalEntityMixin {
         if (lovingPlayer != null) {
             PlayerEntity playerOne = world.getPlayerByUuid(lovingPlayer);
             if (playerOne != null && !playerOne.isCreative() && !playerOne.isSpectator()) {
-                DMOSkills.INSTANCE.gainEXP(playerOne, 15, Skill.Companion.getANIMAL_CARE());
+                DMOSkills.INSTANCE.gainEXP(
+                        playerOne,
+                        DMOSkills.CONFIG.getExp().getAnimalCare().getSources().getAction().getBreeding(),
+                        Skill.Companion.getANIMAL_CARE()
+                );
             }
         }
         if (other.getLovingPlayer() != null) {
             PlayerEntity playerTwo = world.getPlayerByUuid(lovingPlayer);
             if (playerTwo != null && !playerTwo.isCreative() && !playerTwo.isSpectator()) {
-                DMOSkills.INSTANCE.gainEXP(playerTwo, 15, Skill.Companion.getANIMAL_CARE());
+                DMOSkills.INSTANCE.gainEXP(
+                        playerTwo,
+                        DMOSkills.CONFIG.getExp().getAnimalCare().getSources().getAction().getBreeding(),
+                        Skill.Companion.getANIMAL_CARE()
+                );
             }
         }
     }

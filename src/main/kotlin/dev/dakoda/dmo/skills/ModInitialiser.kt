@@ -26,6 +26,7 @@ import net.minecraft.advancement.Advancement
 import net.minecraft.advancement.AdvancementCriterion
 import net.minecraft.advancement.AdvancementManager
 import net.minecraft.block.entity.EnchantingTableBlockEntity
+import net.minecraft.client.gui.screen.ingame.AnvilScreen
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen
 import net.minecraft.entity.boss.dragon.EnderDragonEntity
 import net.minecraft.entity.mob.GhastEntity
@@ -33,6 +34,7 @@ import net.minecraft.entity.mob.ZombieVillagerEntity
 import net.minecraft.entity.passive.CowEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ShieldItem
+import net.minecraft.screen.AnvilScreenHandler
 import net.minecraft.screen.GrindstoneScreenHandler
 import net.minecraft.screen.slot.TradeOutputSlot
 import net.minecraft.util.ActionResult

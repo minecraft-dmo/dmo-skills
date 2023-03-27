@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName
 import dev.dakoda.dmo.skills.Skill
 import dev.dakoda.dmo.skills.Skill.Companion.ALCHEMY
 import dev.dakoda.dmo.skills.Skill.Companion.ANIMAL_CARE
-import dev.dakoda.dmo.skills.Skill.Companion.CARTOGRAPHY
 import dev.dakoda.dmo.skills.Skill.Companion.COOKING
 import dev.dakoda.dmo.skills.Skill.Companion.CULTIVATION
 import dev.dakoda.dmo.skills.Skill.Companion.DUNGEONEER
@@ -57,13 +56,10 @@ class DMOSkillsConfig {
         var cultivation = DMOConfigCultivation()
 
         @SerializedName("animal_care")
-        var animalCare = DMOConfigGeneric()
+        var animalCare = DMOConfigAnimalCare()
 
         @SerializedName("trading")
         var trading = DMOConfigTrading()
-
-        @SerializedName("cartography")
-        var cartography = DMOConfigGeneric()
 
         @SerializedName("dungeoneer")
         var dungeoneer = DMOConfigDungeoneer()
@@ -95,7 +91,6 @@ class DMOSkillsConfig {
         CULTIVATION -> exp.cultivation.defaultHidden
         ANIMAL_CARE -> exp.animalCare.defaultHidden
         TRADING -> exp.trading.defaultHidden
-        CARTOGRAPHY -> exp.cartography.defaultHidden
         DUNGEONEER -> exp.dungeoneer.defaultHidden
         MELEE -> exp.combat.defaultHidden
         RANGER -> exp.combat.defaultHidden
