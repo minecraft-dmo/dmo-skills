@@ -15,7 +15,7 @@ import net.minecraft.potion.Potion
 abstract class AbstractPotionBrewingChecker : AbstractChecker.ChecksPotions<BrewingParams, Rules>() {
 
     class BrewingParams(
-        val potion: Potion,
+        val potion: Potion
     ) : Params()
 
     final override val registry = EXPMap.potions<Rules>()

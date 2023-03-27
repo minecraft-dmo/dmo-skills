@@ -74,7 +74,7 @@ class DMOSkillsConfig {
         var alchemy = DMOConfigAlchemy()
 
         @SerializedName("enchanting")
-        var enchanting = DMOConfigGeneric()
+        var enchanting = DMOConfigEnchanting()
 
         @SerializedName("metalwork")
         var metalwork = DMOConfigMetalwork()

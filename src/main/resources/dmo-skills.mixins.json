@@ -11,6 +11,7 @@
     "dungeoneer.LootableContainerBlockEntityMixin",
     "dungeoneer.PlayerAdvancementTrackerMixin",
     "dungeoneer.StorageMinecartEntityMixin",
+    "enchanting.EnchantmentScreenHandlerMixin",
     "farming.AbstractHorseEntityMixin",
     "farming.AnimalEntityMixin",
     "farming.OcelotEntityMixin",

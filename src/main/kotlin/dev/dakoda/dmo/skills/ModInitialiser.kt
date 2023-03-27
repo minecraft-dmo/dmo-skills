@@ -4,7 +4,6 @@ import com.google.gson.GsonBuilder
 import dev.dakoda.dmo.skills.DMOSkills.CONFIG
 import dev.dakoda.dmo.skills.DMOSkills.LOGGER
 import dev.dakoda.dmo.skills.config.DMOSkillsConfig
-import dev.dakoda.dmo.skills.event.PlayerAdvancementEvent
 import dev.dakoda.dmo.skills.exp.AbstractBreakBlockChecker.BreakBlockParams
 import dev.dakoda.dmo.skills.exp.AbstractEntityKillChecker.EntityKillParams
 import dev.dakoda.dmo.skills.exp.AbstractUseBlockChecker.UseBlockParams
@@ -22,26 +21,8 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.advancement.Advancement
-import net.minecraft.advancement.AdvancementCriterion
-import net.minecraft.advancement.AdvancementManager
-import net.minecraft.block.entity.EnchantingTableBlockEntity
-import net.minecraft.client.gui.screen.ingame.AnvilScreen
-import net.minecraft.client.gui.screen.ingame.EnchantmentScreen
-import net.minecraft.entity.boss.dragon.EnderDragonEntity
-import net.minecraft.entity.mob.GhastEntity
-import net.minecraft.entity.mob.ZombieVillagerEntity
-import net.minecraft.entity.passive.CowEntity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ShieldItem
-import net.minecraft.screen.AnvilScreenHandler
-import net.minecraft.screen.GrindstoneScreenHandler
-import net.minecraft.screen.slot.TradeOutputSlot
-import net.minecraft.util.ActionResult
 import net.minecraft.util.ActionResult.PASS
-import net.minecraft.village.TradeOffer
-import net.minecraft.village.TradeOffers
-import net.minecraft.world.dimension.NetherPortal
 import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.nio.file.Files
@@ -153,6 +134,8 @@ class ModInitialiser : ModInitializer {
         if (FabricLoader.getInstance().isModLoaded("dmo-cooking")) {
             CONFIG.exp.cooking.overridden = true
             println("Cooking EXP has been overridden by dmo-cooking; disabling crafting hooks")
-        } else CookingChecker
+        } else {
+            CookingChecker
+        }
     }
 }
